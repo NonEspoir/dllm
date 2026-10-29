@@ -41,7 +41,7 @@
 - 新采样器：`FastAncestralSampler`，配置名 `fast_ancestral`。改完必须通过 04 文档 §2.4 的三层验证。
 - 数据划分固定在 `data/splits/gsm8k_dev_ids.json`，不要重新切。
 - 我们自己的测试放在 `code/tests/`，**不要用 `code/test/`**：上游的 `.gitignore` 会忽略 `test/` 目录和 `*.log`、`*.ipynb`。
-- 远程仓库是私有的（D28），里面有题目原文，不要改成公开。
+- 远程仓库 `github.com/NonEspoir/dllm` 是**公开**的（D28，用户 10-30 决定）。不要往仓库里写个人信息、服务器地址、密钥或与本作业无关的求职信息。
 - 不在 Mac 上跑代码。所有测试，包括新采样器的逐字一致测试，都在 4090 上跑。
 
 ## 和用户沟通
