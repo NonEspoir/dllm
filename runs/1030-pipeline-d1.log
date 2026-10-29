@@ -1,0 +1,60 @@
+=== 2026-10-30T04:04:46+08:00 start 1030-L2-ancestral-dev200-s256
+=== 2026-10-30T04:07:19+08:00 end 1030-L2-ancestral-dev200-s256 exit=0
+=== 2026-10-30T04:07:19+08:00 start 1030-L2-fast-dev200-s256
+=== 2026-10-30T04:08:40+08:00 end 1030-L2-fast-dev200-s256 exit=0
+=== 2026-10-30T04:08:40+08:00 start 1030-L3-fast-dev200-s256-b200
+=== 2026-10-30T04:09:48+08:00 end 1030-L3-fast-dev200-s256-b200 exit=0
+=== 2026-10-30T04:09:48+08:00 start 1030-repro-ancestral-test-s1024
+=== 2026-10-30T05:09:52+08:00 end 1030-repro-ancestral-test-s1024 exit=0
+=== 2026-10-30T05:09:52+08:00 start 1030-sweep-fast-dev-s64-T1.0
+=== 2026-10-30T05:11:16+08:00 end 1030-sweep-fast-dev-s64-T1.0 exit=0
+=== 2026-10-30T05:11:16+08:00 start 1030-sweep-fast-dev-s128-T1.0
+=== 2026-10-30T05:13:44+08:00 end 1030-sweep-fast-dev-s128-T1.0 exit=0
+=== 2026-10-30T05:13:44+08:00 start 1030-sweep-fast-dev-s256-T1.0
+=== 2026-10-30T05:18:21+08:00 end 1030-sweep-fast-dev-s256-T1.0 exit=0
+=== 2026-10-30T05:18:21+08:00 start 1030-sweep-fast-dev-s512-T1.0
+=== 2026-10-30T05:27:14+08:00 end 1030-sweep-fast-dev-s512-T1.0 exit=0
+=== 2026-10-30T05:27:14+08:00 start 1030-sweep-fast-dev-s1024-T1.0
+=== 2026-10-30T05:44:40+08:00 end 1030-sweep-fast-dev-s1024-T1.0 exit=0
+=== 2026-10-30T05:44:40+08:00 start 1030-sweep-fast-dev-s64-T0.1
+=== 2026-10-30T05:46:04+08:00 end 1030-sweep-fast-dev-s64-T0.1 exit=0
+=== 2026-10-30T05:46:04+08:00 start 1030-sweep-fast-dev-s128-T0.1
+=== 2026-10-30T05:48:32+08:00 end 1030-sweep-fast-dev-s128-T0.1 exit=0
+=== 2026-10-30T05:48:32+08:00 start 1030-sweep-fast-dev-s256-T0.1
+=== 2026-10-30T05:53:07+08:00 end 1030-sweep-fast-dev-s256-T0.1 exit=0
+=== 2026-10-30T05:53:07+08:00 start 1030-sweep-fast-dev-s512-T0.1
+=== 2026-10-30T06:02:00+08:00 end 1030-sweep-fast-dev-s512-T0.1 exit=0
+=== 2026-10-30T06:02:00+08:00 start 1030-sweep-fast-dev-s1024-T0.1
+=== 2026-10-30T06:19:35+08:00 end 1030-sweep-fast-dev-s1024-T0.1 exit=0
+# D1 pipeline summary (2026-10-30T06:19:35+08:00)
+
+## Sampler check (dev200, 256 steps, T=1)
+
+| run | split | sampler | steps | T | acc | 95% CI | wall (s) | peak mem (MiB) |
+|---|---|---|---|---|---|---|---|---|
+| 1030-L2-ancestral-dev200-s256 | dev200 | ancestral | 256 | 1.0 | 15.50% (31/200) | [10.5, 21.0] | 153 | 47111 |
+| 1030-L2-fast-dev200-s256 | dev200 | fast_ancestral | 256 | 1.0 | 17.00% (34/200) | [12.0, 22.0] | 76 | 5005 |
+| 1030-L3-fast-dev200-s256-b200 | dev200 | fast_ancestral | 256 | 1.0 | 18.00% (36/200) | [13.0, 23.5] | 67 | 7775 |
+
+1030-L2-ancestral-dev200-s256 0.1550 vs 1030-L2-fast-dev200-s256 0.1700: only-b-correct=24 only-a-correct=21 McNemar p=0.766
+
+## Reproduction (test, upstream sampler, 1024 steps, T=1; paper: 18.0)
+
+| run | split | sampler | steps | T | acc | 95% CI | wall (s) | peak mem (MiB) |
+|---|---|---|---|---|---|---|---|---|
+| 1030-repro-ancestral-test-s1024 | test | ancestral | 1024 | 1.0 | 15.92% (210/1319) | [14.0, 18.0] | 3599 | 46679 |
+
+## Sweep (dev 1000, fast sampler)
+
+| run | split | sampler | steps | T | acc | 95% CI | wall (s) | peak mem (MiB) |
+|---|---|---|---|---|---|---|---|---|
+| 1030-sweep-fast-dev-s1024-T0.1 | dev | fast_ancestral | 1024 | 0.1 | 38.10% (381/1000) | [35.0, 41.0] | 1050 | 7775 |
+| 1030-sweep-fast-dev-s1024-T1.0 | dev | fast_ancestral | 1024 | 1.0 | 17.50% (175/1000) | [15.3, 19.8] | 1046 | 7775 |
+| 1030-sweep-fast-dev-s128-T0.1 | dev | fast_ancestral | 128 | 0.1 | 36.20% (362/1000) | [33.3, 39.1] | 148 | 7775 |
+| 1030-sweep-fast-dev-s128-T1.0 | dev | fast_ancestral | 128 | 1.0 | 14.30% (143/1000) | [12.1, 16.6] | 148 | 7775 |
+| 1030-sweep-fast-dev-s256-T0.1 | dev | fast_ancestral | 256 | 0.1 | 36.90% (369/1000) | [33.9, 39.7] | 275 | 7775 |
+| 1030-sweep-fast-dev-s256-T1.0 | dev | fast_ancestral | 256 | 1.0 | 15.60% (156/1000) | [13.3, 18.1] | 277 | 7775 |
+| 1030-sweep-fast-dev-s512-T0.1 | dev | fast_ancestral | 512 | 0.1 | 38.80% (388/1000) | [35.9, 41.7] | 532 | 7775 |
+| 1030-sweep-fast-dev-s512-T1.0 | dev | fast_ancestral | 512 | 1.0 | 17.80% (178/1000) | [15.5, 20.2] | 533 | 7775 |
+| 1030-sweep-fast-dev-s64-T0.1 | dev | fast_ancestral | 64 | 0.1 | 33.60% (336/1000) | [30.7, 36.6] | 84 | 16115 |
+| 1030-sweep-fast-dev-s64-T1.0 | dev | fast_ancestral | 64 | 1.0 | 10.40% (104/1000) | [8.6, 12.3] | 84 | 16115 |
