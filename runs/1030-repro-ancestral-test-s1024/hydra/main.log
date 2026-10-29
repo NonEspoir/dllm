@@ -1,0 +1,7 @@
+[2026-10-30 04:09:55,300][__main__][INFO] - Starting GSM8K eval.
+[2026-10-30 04:09:59,399][dataloader][INFO] - Preparing GSM8K test dataset from /root/autodl-tmp/data/gsm8k_test.json
+[2026-10-30 05:09:39,872][__main__][INFO] - Rank 0: average NFE per batch: 1024.0
+[2026-10-30 05:09:39,883][__main__][INFO] - Rank 0: saved 1319 records to /root/autodl-tmp/dllm/runs/1030-repro-ancestral-test-s1024/rank_0000.json
+[2026-10-30 05:09:39,912][__main__][INFO] - Total records evaluated: 1319
+[2026-10-30 05:09:45,132][__main__][INFO] - GSM8K accuracy: 15.94% [14.03%, 17.97%] (95% CI) (210/1319, bootstrap N=1000)
+[2026-10-30 05:09:45,143][__main__][INFO] - Results saved to /root/autodl-tmp/dllm/runs/1030-repro-ancestral-test-s1024/results.json
