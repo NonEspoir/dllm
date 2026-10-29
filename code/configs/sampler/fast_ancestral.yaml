@@ -1,0 +1,14 @@
+# Fast ancestral sampler for MDLM (fast_sampler.py, D07).
+# Same distribution as `ancestral`; float64 work only at revealed positions.
+predictor: fast_ancestral
+steps: 1024
+steps_policy: full      # full: use steps as-is / proportional: steps * num_tokens_to_generate
+noise_removal: ancestral  # ancestral / greedy
+use_float64: true
+p_nucleus: 1.0
+temperature: 1.0
+num_sample_batches: 2
+num_sample_log: 2
+logits_mode: selected   # full: upstream forward then gather / selected: output layer on revealed rows only
+noise_mode: fast        # fast / reference (replays upstream RNG order; token-exact test only)
+skip_unchanged: false   # reuse hidden states of rows unchanged since their last forward

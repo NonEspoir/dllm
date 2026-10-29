@@ -1064,4 +1064,15 @@ def get_sampler(config):
   if s.predictor == 'candi':
     return CANDISampler()
 
+  if s.predictor == 'fast_ancestral':
+    import fast_sampler  # local import: fast_sampler imports this module
+    return fast_sampler.FastAncestralSampler(
+      use_float64=s.use_float64,
+      noise_removal=s.noise_removal,
+      steps_policy=s.steps_policy,
+      temperature=s.temperature,
+      logits_mode=s.logits_mode,
+      noise_mode=s.noise_mode,
+      skip_unchanged=s.skip_unchanged)
+
   raise ValueError(f'Unknown sampler predictor: {s.predictor}')
