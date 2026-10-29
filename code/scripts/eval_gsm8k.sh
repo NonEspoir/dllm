@@ -11,6 +11,7 @@
 set -euo pipefail
 export TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1
 export HF_ENDPOINT="${HF_ENDPOINT:-https://hf-mirror.com}"
+export OMP_NUM_THREADS=8  # AutoDL sets OMP_NUM_THREADS=0, which libgomp rejects
 
 CODE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 REPO_ROOT="$(cd "${CODE_DIR}/.." && pwd)"
@@ -25,8 +26,8 @@ CKPT_PATH="${CKPT_PATH:-/root/autodl-tmp/checkpoints/tinygsm/mdlm.ckpt}"
 RUN_NAME="${RUN_NAME:-$(date +%m%d)-${SPLIT}-${SAMPLER}-s${STEPS}-T${TEMP}}"
 RUN_DIR="${REPO_ROOT}/runs/${RUN_NAME}"
 
-if [[ -e "${RUN_DIR}/results.json" ]]; then
-  echo "refusing to overwrite ${RUN_DIR}/results.json" >&2; exit 1
+if [[ -e "${RUN_DIR}/samples/results.json" ]]; then
+  echo "refusing to overwrite ${RUN_DIR}/samples/results.json" >&2; exit 1
 fi
 mkdir -p "${RUN_DIR}"
 {
@@ -40,6 +41,9 @@ mkdir -p "${RUN_DIR}"
 } > "${RUN_DIR}/run_info.txt"
 
 cd "${CODE_DIR}"
+nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits -lms 1000 \
+  > "${RUN_DIR}/gpu_mem_mib.txt" 2>/dev/null &
+MEM_PID=$!
 START=$(date +%s)
 python -u -m main \
     mode=gsm8k_eval \
@@ -65,7 +69,13 @@ python -u -m main \
     hydra.run.dir="${RUN_DIR}/hydra" \
     "$@" 2>&1 | tee "${RUN_DIR}/log.txt"
 END=$(date +%s)
+kill "${MEM_PID}" 2>/dev/null || true
 {
   echo "end: $(date -Is)"; echo "wall_seconds: $((END - START))"
+  echo "peak_gpu_mem_mib: $(sort -n "${RUN_DIR}/gpu_mem_mib.txt" | tail -1)"; rm -f "${RUN_DIR}/gpu_mem_mib.txt"
 } >> "${RUN_DIR}/run_info.txt"
 rm -f "${RUN_DIR}"/rank_*.json
+# Generations go to samples/ (git-ignored); metrics.json is committed.
+mkdir -p "${RUN_DIR}/samples"
+mv "${RUN_DIR}/results.json" "${RUN_DIR}/samples/results.json"
+python "${CODE_DIR}/scripts/summarize_runs.py" metrics "${RUN_DIR}"

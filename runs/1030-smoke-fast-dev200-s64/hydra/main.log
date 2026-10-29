@@ -1,0 +1,7 @@
+[2026-10-30 03:56:41,389][__main__][INFO] - Starting GSM8K eval.
+[2026-10-30 03:56:45,253][dataloader][INFO] - Preparing GSM8K test dataset from /root/autodl-tmp/data/gsm8k_dev200.json
+[2026-10-30 03:56:59,746][__main__][INFO] - Rank 0: average NFE per batch: 64.0
+[2026-10-30 03:56:59,748][__main__][INFO] - Rank 0: saved 200 records to /root/autodl-tmp/dllm/runs/1030-smoke-fast-dev200-s64/rank_0000.json
+[2026-10-30 03:56:59,772][__main__][INFO] - Total records evaluated: 200
+[2026-10-30 03:56:59,808][__main__][INFO] - GSM8K accuracy: 8.94% [5.50%, 13.00%] (95% CI) (18/200, bootstrap N=1000)
+[2026-10-30 03:56:59,810][__main__][INFO] - Results saved to /root/autodl-tmp/dllm/runs/1030-smoke-fast-dev200-s64/results.json
