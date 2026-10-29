@@ -1,6 +1,6 @@
 # CLAUDE.md —— DLM 大作业项目规则
 
-每个会话开始时自动读入。本地（`/Users/jr/codes/projects/dllm/`）和服务器（`/root/dllm/`）共用这一份。
+每个会话开始时自动读入。本地（`/Users/jr/codes/projects/dllm/`）和服务器（`/root/autodl-tmp/dllm/`）共用这一份。
 
 ## 项目一句话
 
@@ -28,7 +28,7 @@
 
 ## AutoDL 规则（不刻意省钱，只防明显浪费，D27）
 
-- **工作方式**（D27，R21 修订）：**代码在服务器上改、在服务器上跑**（A800）。服务器和本地都以 GitHub `main` 为准：改之前先 `git pull`，改完提交并 `git push`（推送前 `source /etc/network_turbo`）。不在 Mac 上执行代码。
+- **工作方式**（D27，R21 修订）：**代码在服务器上改、在服务器上跑**（A800）。服务器和本地都以 GitHub `main` 为准：改之前先 `git pull`，改完提交并 `git push`（服务器所在地区学术加速不可用，推送走 SSH，见 07 §5）。不在 Mac 上执行代码。
 - 工作时段实例一直开着，不为省钱频繁开关机。只在用户要睡觉或长时间离开、且没有任务在跑时，提醒一句关机（包周则不用）。
 - 长任务在 tmux 里跑，日志重定向到文件。按量计费时，夜里的长任务可以在命令末尾加 `; /usr/bin/shutdown`；加之前先问用户。如果 Claude 本身就运行在这台服务器上，关机会把会话一起关掉。
 - checkpoint、数据放在 `/root/autodl-tmp/`（免费 50GB）；checkpoint 只存权重，不存优化器状态。
