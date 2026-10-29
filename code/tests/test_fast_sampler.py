@@ -16,12 +16,14 @@ import sys
 
 import hydra
 import torch
-import torch._inductor.config
+import torch._dynamo
 
-# Upstream's sample_absorbing_posterior is torch.compile'd; by default
-# Inductor draws random numbers with its own generator, so eager and
-# compiled code would consume different streams. Make them identical.
-torch._inductor.config.fallback_random = True
+# Upstream's sample_absorbing_posterior is torch.compile'd, and the compiled
+# kernel draws its random numbers differently from eager PyTorch (even with
+# inductor fallback_random=True, checked on the A800 10-30). Run everything
+# eagerly here: the arithmetic is the same, and the compiled path is covered
+# by the statistical check (layer 2).
+torch._dynamo.config.disable = True
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import main as upstream_main  # noqa: F401  (registers OmegaConf resolvers)
