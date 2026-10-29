@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# 大文件：模型权重、数据、缓存不进 git（放在服务器 /root/autodl-tmp/）
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.parquet
+*.arrow
+checkpoints/
+data_cache/
+.hf_cache/
+
+# 训练 / 评测的原始输出；runs/ 里只提交配置、指标、日志和少量样例
+code/outputs/
+code/eval_runs/
+wandb/
+runs/**/samples/
+
+# 密钥
+.env
