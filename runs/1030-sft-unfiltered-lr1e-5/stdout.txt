@@ -1,0 +1,23 @@
+{
+ "select": "unfiltered",
+ "records": 6464,
+ "too_long": 0,
+ "train": 6335,
+ "val": 129,
+ "loss_tokens_per_example": 448.9703063964844,
+ "answer_tokens_per_example": 167.56512451171875,
+ "steps_per_epoch": 98,
+ "total_steps": 490
+}
+/root/miniconda3/lib/python3.12/site-packages/lightning/pytorch/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.6.0, which is newer than your current Lightning version: v2.5.1
+/root/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1617: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be deprecated in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+epoch 0 val_loss 0.1253
+/root/autodl-tmp/dllm/code/scripts/sft.py:268: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:835.)
+  run_loss += float(loss) * args.accum
+{"epoch": 1, "step": 98, "val_loss": 0.08294547200089332, "elapsed_s": 39.8, "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch1.ckpt"}
+{"epoch": 2, "step": 196, "val_loss": 0.07735110341379926, "elapsed_s": 80.3, "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch2.ckpt"}
+{"epoch": 3, "step": 294, "val_loss": 0.07487158072934434, "elapsed_s": 120.9, "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch3.ckpt"}
+{"epoch": 4, "step": 392, "val_loss": 0.07375046571946822, "elapsed_s": 161.4, "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch4.ckpt"}
+{"epoch": 5, "step": 490, "val_loss": 0.07330144602037286, "elapsed_s": 201.9, "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch5.ckpt"}

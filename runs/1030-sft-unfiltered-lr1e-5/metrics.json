@@ -1,0 +1,46 @@
+{
+ "epochs": [
+  {
+   "epoch": 0,
+   "step": 0,
+   "val_loss": 0.1252974161697131
+  },
+  {
+   "epoch": 1,
+   "step": 98,
+   "val_loss": 0.08294547200089332,
+   "elapsed_s": 39.8,
+   "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch1.ckpt"
+  },
+  {
+   "epoch": 2,
+   "step": 196,
+   "val_loss": 0.07735110341379926,
+   "elapsed_s": 80.3,
+   "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch2.ckpt"
+  },
+  {
+   "epoch": 3,
+   "step": 294,
+   "val_loss": 0.07487158072934434,
+   "elapsed_s": 120.9,
+   "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch3.ckpt"
+  },
+  {
+   "epoch": 4,
+   "step": 392,
+   "val_loss": 0.07375046571946822,
+   "elapsed_s": 161.4,
+   "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch4.ckpt"
+  },
+  {
+   "epoch": 5,
+   "step": 490,
+   "val_loss": 0.07330144602037286,
+   "elapsed_s": 201.9,
+   "ckpt": "/root/autodl-tmp/sft_ckpt/1030-sft-unfiltered-lr1e-5/epoch5.ckpt"
+  }
+ ],
+ "train_seconds": 202.5,
+ "peak_gpu_mem_mib": 35807
+}
