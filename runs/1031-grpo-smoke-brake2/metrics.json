@@ -1,0 +1,17 @@
+{
+ "evals": [
+  {
+   "step": 2,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-smoke-brake2/step2.ckpt",
+   "acc_T1.0": 0.205,
+   "acc_T0.1": 0.4
+  }
+ ],
+ "stopped_early": {
+  "step": 2,
+  "mean_action_logp": -0.10127334006131333,
+  "threshold": -0.050636670030656666
+ },
+ "train_seconds": 315.9,
+ "peak_gpu_mem_mib": 21329
+}
