@@ -191,3 +191,5 @@ EVAL {"step": 50, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr3e-6-nostd-
 | 30 | 22.5 | 0.5 (+2/-0) | 39.5 | 1 (+3/-2) |
 | 40 | 22.5 | 0.5 (+2/-0) | 40.5 | 0.375 (+4/-1) |
 | 50 | 22.0 | 1 (+2/-1) | 39.5 | 1 (+3/-2) |
+=== 2026-10-30T23:09:22+08:00 extra pipeline done
+=== no shutdown (SHUTDOWN=1, NO_SHUTDOWN present)
