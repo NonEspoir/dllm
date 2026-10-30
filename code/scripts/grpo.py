@@ -144,7 +144,7 @@ def main():
     json.dump(info, f, indent=1)
   log = open(os.path.join(run_dir, 'train_log.jsonl'), 'w')
   evals = []
-  recent_logp, first_logp = [], []
+  recent_logp, start_logp = [], []
   stopped = None
   gen = torch.Generator().manual_seed(args.seed)
   cursor, t_start = 0, time.time()
@@ -247,11 +247,11 @@ def main():
     # brake: diverging policy (action log-prob falling)
     if rec.get('action_logp') is not None:
       recent_logp = (recent_logp + [rec['action_logp']])[-args.stop_window:]
-      if len(first_logp) < args.stop_window:
-        first_logp.append(rec['action_logp'])
+      if len(start_logp) < args.stop_window:
+        start_logp.append(rec['action_logp'])
     threshold = args.stop_logp
-    if args.stop_ratio is not None and len(first_logp) == args.stop_window:
-      threshold = args.stop_ratio * sum(first_logp) / args.stop_window
+    if args.stop_ratio is not None and len(start_logp) == args.stop_window:
+      threshold = args.stop_ratio * sum(start_logp) / args.stop_window
     if (threshold is not None and len(recent_logp) == args.stop_window
         and sum(recent_logp) / args.stop_window < threshold):
       stopped = {'step': step, 'mean_action_logp': sum(recent_logp) / args.stop_window,
