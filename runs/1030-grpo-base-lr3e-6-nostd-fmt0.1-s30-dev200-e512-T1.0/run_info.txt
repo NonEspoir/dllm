@@ -1,0 +1,15 @@
+git_commit: f9b8da03ab40aa6aa9cb49927c979cd1b45bed14
+git_dirty: 21
+split: dev200
+sampler: fast_ancestral
+steps: 512
+temperature: 1.0
+batch: 200
+seed: 1
+ckpt: /root/autodl-tmp/rl_ckpt/1030-grpo-base-lr3e-6-nostd-fmt0.1/step30.ckpt
+extra: sampler.skip_unchanged=true
+gpu: NVIDIA A800 80GB PCIe
+start: 2026-10-30T22:47:35+08:00
+end: 2026-10-30T22:48:52+08:00
+wall_seconds: 77
+peak_gpu_mem_mib: 24401
