@@ -1,0 +1,203 @@
+Seed set to 1
+CONFIG
+├── mode
+│   └── gsm8k_eval                                                              
+├── sudoku
+│   └── output_dir: /root/autodl-tmp/dllm/runs/1030-grpo-base-d5-binary-s225-dev
+│       batch_size: 64                                                          
+│                                                                               
+├── gsm8k
+│   └── input_file: null                                                        
+│       output_dir: /root/autodl-tmp/dllm/runs/1030-grpo-base-d5-binary-s225-dev
+│       timeout: 5.0                                                            
+│       bootstrap_size: 1000                                                    
+│                                                                               
+├── seed
+│   └── 1                                                                       
+├── allow_tf32
+│   └── True                                                                    
+├── cudnn_benchmark
+│   └── True                                                                    
+├── compile_backbone
+│   └── False                                                                   
+├── neg_infinity_mode
+│   └── large-finite                                                            
+├── loader
+│   └── global_batch_size: 512                                                  
+│       eval_global_batch_size: 512                                             
+│       batch_size: 512                                                         
+│       eval_batch_size: 200                                                    
+│       num_workers: 4                                                          
+│       pin_memory: true                                                        
+│                                                                               
+├── confidence_denoiser
+│   └── confidence_score: entropy                                               
+│       gamma: 0                                                                
+│                                                                               
+├── training
+│   └── ema: 0.9999                                                             
+│       antithetic_sampling: true                                               
+│       importance_sampling: false                                              
+│       sampling_eps: 0.001                                                     
+│       change_of_variables: false                                              
+│       loss_precision: bf16                                                    
+│       finetune_path: ''                                                       
+│       sampling_eps_min: 0.001                                                 
+│       sampling_eps_max: 1.0                                                   
+│       resample: false                                                         
+│                                                                               
+├── eval
+│   └── checkpoint_path: /root/autodl-tmp/rl_ckpt/1030-grpo-base-d5-binary/step2
+│       strict_loading: true                                                    
+│       disable_ema: false                                                      
+│       compute_generative_perplexity: false                                    
+│       perplexity_batch_size: 8                                                
+│       compute_perplexity_on_sanity: false                                     
+│       gen_ppl_eval_model_name_or_path: gpt2-large                             
+│       generate_samples: true                                                  
+│       generated_samples_path: /root/autodl-tmp/dllm/runs/1030-grpo-base-d5-bin
+│       results_json_path: null                                                 
+│                                                                               
+├── optim
+│   └── weight_decay: 0                                                         
+│       lr: 0.0003                                                              
+│       beta1: 0.9                                                              
+│       beta2: 0.999                                                            
+│       eps: 1.0e-08                                                            
+│                                                                               
+├── trainer
+│   └── _target_: lightning.Trainer                                             
+│       accelerator: cuda                                                       
+│       num_nodes: 1                                                            
+│       devices: 1                                                              
+│       accumulate_grad_batches: 1                                              
+│       gradient_clip_val: 1.0                                                  
+│       precision: bf16                                                         
+│       num_sanity_val_steps: 2                                                 
+│       max_steps: 1000000                                                      
+│       log_every_n_steps: 100                                                  
+│       limit_train_batches: 1.0                                                
+│       limit_val_batches: 1.0                                                  
+│       val_check_interval: 5000                                                
+│       check_val_every_n_epoch: null                                           
+│                                                                               
+├── wandb
+│   └── project: debug                                                          
+│       notes: null                                                             
+│       group: null                                                             
+│       job_type: null                                                          
+│       tags:                                                                   
+│       - log-linear                                                            
+│       - gsm8k_test                                                            
+│       - gsm8k_test                                                            
+│       - mdlm                                                                  
+│       offline: true                                                           
+│                                                                               
+├── checkpointing
+│   └── save_dir: /root/autodl-tmp/dllm/runs/1030-grpo-base-d5-binary-s225-dev20
+│       resume_from_ckpt: true                                                  
+│       resume_ckpt_path: /root/autodl-tmp/dllm/runs/1030-grpo-base-d5-binary-s2
+│                                                                               
+├── callbacks
+│   └── checkpoint_every_n_steps:                                               
+│         _target_: lightning.pytorch.callbacks.ModelCheckpoint                 
+│         save_top_k: -1                                                        
+│         save_last: true                                                       
+│         dirpath: /root/autodl-tmp/dllm/runs/1030-grpo-base-d5-binary-s225-dev2
+│         verbose: true                                                         
+│         auto_insert_metric_name: false                                        
+│         every_n_train_steps: 500                                              
+│       checkpoint_monitor:                                                     
+│         _target_: lightning.pytorch.callbacks.ModelCheckpoint                 
+│         monitor: val/nll                                                      
+│         mode: min                                                             
+│         save_top_k: 1                                                         
+│         save_last: false                                                      
+│         dirpath: /root/autodl-tmp/dllm/runs/1030-grpo-base-d5-binary-s225-dev2
+│         filename: best                                                        
+│         auto_insert_metric_name: false                                        
+│         verbose: true                                                         
+│       learning_rate_monitor:                                                  
+│         _target_: lightning.pytorch.callbacks.LearningRateMonitor             
+│         logging_interval: step                                                
+│                                                                               
+├── data
+│   └── train: gsm8k_test                                                       
+│       valid: gsm8k_test                                                       
+│       tokenizer_name_or_path: HuggingFaceTB/SmolLM-135M                       
+│       wrap: false                                                             
+│       cache_dir: /root/autodl-tmp/data_cache/gsm8k_dev200                     
+│       data_path: /root/autodl-tmp/data/gsm8k_dev200.json                      
+│       separator: \n                                                           
+│       streaming: false                                                        
+│       insert_train_eos: true                                                  
+│       insert_valid_eos: true                                                  
+│                                                                               
+├── model
+│   └── name: small                                                             
+│       type: dit                                                               
+│       hidden_size: 768                                                        
+│       cond_dim: 128                                                           
+│       length: 512                                                             
+│       n_blocks: 12                                                            
+│       n_heads: 12                                                             
+│       dropout: 0.1                                                            
+│                                                                               
+├── strategy
+│   └── _target_: lightning.pytorch.strategies.DDPStrategy                      
+│       find_unused_parameters: false                                           
+│                                                                               
+├── noise
+│   └── type: log-linear                                                        
+│       eps: 0.001                                                              
+│       alpha_min: null                                                         
+│       alpha_max: null                                                         
+│       adaptive: false                                                         
+│                                                                               
+├── lr_scheduler
+│   └── _target_: transformers.get_constant_schedule_with_warmup                
+│       num_warmup_steps: 2500                                                  
+│                                                                               
+├── prior
+│   └── type: none                                                              
+│       latent_width: 0                                                         
+│       latent_height: 0                                                        
+│                                                                               
+├── algo
+│   └── name: mdlm                                                              
+│       diffusion_type: absorbing                                               
+│       backbone: dit                                                           
+│       parameterization: subs                                                  
+│       time_conditioning: false                                                
+│       T: 0                                                                    
+│       causal_attention: false                                                 
+│       loss_type: elbo                                                         
+│       post_process_mode: log_probs                                            
+│       adaLN: true                                                             
+│                                                                               
+└── sampler
+    └── predictor: fast_ancestral                                               
+        steps: 512                                                              
+        steps_policy: full                                                      
+        noise_removal: ancestral                                                
+        use_float64: true                                                       
+        p_nucleus: 1.0                                                          
+        temperature: 0.1                                                        
+        num_sample_batches: 2                                                   
+        num_sample_log: 2                                                       
+        logits_mode: selected                                                   
+        noise_mode: fast                                                        
+        skip_unchanged: true                                                    
+                                                                                
+[2026-10-31 02:57:33,962][__main__][INFO] - Starting GSM8K eval.
+Seed set to 1
+/root/miniconda3/lib/python3.12/site-packages/lightning/pytorch/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.6.0, which is newer than your current Lightning version: v2.5.1
+/root/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1617: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be deprecated in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+[2026-10-31 02:57:36,412][dataloader][INFO] - Loading GSM8K test from cache: /root/autodl-tmp/data_cache/gsm8k_dev200/gsm8k_test_HuggingFaceTB__SmolLM-135M_with_text
+Rank 0 sampling:   0%|          | 0/1 [00:00<?, ?it/s]Rank 0 sampling: 100%|██████████| 1/1 [01:03<00:00, 63.26s/it]Rank 0 sampling: 100%|██████████| 1/1 [01:03<00:00, 63.26s/it]
+[2026-10-31 02:58:39,672][__main__][INFO] - Rank 0: average NFE per batch: 512.0
+[2026-10-31 02:58:39,674][__main__][INFO] - Rank 0: saved 200 records to /root/autodl-tmp/dllm/runs/1030-grpo-base-d5-binary-s225-dev200-e512-T0.1/rank_0000.json
+[2026-10-31 02:58:39,725][__main__][INFO] - Total records evaluated: 200
+[2026-10-31 02:58:39,756][__main__][INFO] - GSM8K accuracy: 26.90% [20.99%, 33.00%] (95% CI) (54/200, bootstrap N=1000)
+[2026-10-31 02:58:39,758][__main__][INFO] - Results saved to /root/autodl-tmp/dllm/runs/1030-grpo-base-d5-binary-s225-dev200-e512-T0.1/results.json

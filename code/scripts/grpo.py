@@ -98,6 +98,14 @@ def main():
   p.add_argument('--keep_ckpts', choices=['all', 'best_last'], default='all',
                  help='best_last: keep only the best-so-far (mean dev acc over '
                       'both temperatures, ties -> earlier) and the latest checkpoint')
+  p.add_argument('--stop_logp', type=float, default=None,
+                 help='brake (R39): stop when the mean action log-prob of the last '
+                      '--stop_window steps falls below this (D5 binary arm diverged '
+                      'from about -0.07 to -1.8); the stopping step is saved and evaluated')
+  p.add_argument('--stop_ratio', type=float, default=None,
+                 help='brake relative to the start: stop when the last-window mean '
+                      'action log-prob < ratio x the mean of the first window')
+  p.add_argument('--stop_window', type=int, default=10)
   p.add_argument('--pool_size', type=int, default=0,
                  help='sanity check: train on the first N questions only (cycling)')
   args = p.parse_args()
@@ -136,6 +144,8 @@ def main():
     json.dump(info, f, indent=1)
   log = open(os.path.join(run_dir, 'train_log.jsonl'), 'w')
   evals = []
+  recent_logp, first_logp = [], []
+  stopped = None
   gen = torch.Generator().manual_seed(args.seed)
   cursor, t_start = 0, time.time()
 
@@ -234,8 +244,23 @@ def main():
     del ro
     torch.cuda.empty_cache()
 
+    # brake: diverging policy (action log-prob falling)
+    if rec.get('action_logp') is not None:
+      recent_logp = (recent_logp + [rec['action_logp']])[-args.stop_window:]
+      if len(first_logp) < args.stop_window:
+        first_logp.append(rec['action_logp'])
+    threshold = args.stop_logp
+    if args.stop_ratio is not None and len(first_logp) == args.stop_window:
+      threshold = args.stop_ratio * sum(first_logp) / args.stop_window
+    if (threshold is not None and len(recent_logp) == args.stop_window
+        and sum(recent_logp) / args.stop_window < threshold):
+      stopped = {'step': step, 'mean_action_logp': sum(recent_logp) / args.stop_window,
+                 'threshold': threshold}
+      print('STOP', json.dumps(stopped), flush=True)
+
     # periodic eval (same protocol as the base runs)
-    if not args.no_eval and (step % args.eval_every == 0 or step == args.steps):
+    if not args.no_eval and (step % args.eval_every == 0 or step == args.steps
+                             or stopped is not None):
       path = os.path.join(ckpt_dir, f'step{step}.ckpt')
       sft.save_ckpt(model, base, path)
       e = {'step': step, 'ckpt': path}
@@ -254,10 +279,13 @@ def main():
           if x is not best and os.path.exists(x['ckpt']):
             os.remove(x['ckpt'])
             x['ckpt_deleted'] = True
+    if stopped is not None:
+      break
 
   log.close()
   with open(os.path.join(run_dir, 'metrics.json'), 'w') as f:
-    json.dump({'evals': evals, 'train_seconds': round(time.time() - t_start, 1),
+    json.dump({'evals': evals, 'stopped_early': stopped,
+               'train_seconds': round(time.time() - t_start, 1),
                'peak_gpu_mem_mib': torch.cuda.max_memory_allocated() // 2**20},
               f, indent=1)
 

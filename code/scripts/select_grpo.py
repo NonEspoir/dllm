@@ -20,9 +20,19 @@ from scripts.summarize_runs import mcnemar  # noqa: E402
 RUNS = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../runs'))
 
 
+def load_evals(run):
+  """metrics.json, or the EVAL lines of stdout.txt for a run that was stopped
+  before writing it (D5 binary arm, stopped at step 264 after diverging)."""
+  path = os.path.join(run, 'metrics.json')
+  if os.path.exists(path):
+    with open(path) as f:
+      return json.load(f)['evals']
+  with open(os.path.join(run, 'stdout.txt')) as f:
+    return [json.loads(l[len('EVAL '):]) for l in f if l.startswith('EVAL ')]
+
+
 def pick(run):
-  with open(os.path.join(run, 'metrics.json')) as f:
-    evals = json.load(f)['evals']
+  evals = load_evals(run)
   ok = [e for e in evals if e.get('acc_T1.0') is not None and e.get('acc_T0.1') is not None]
   best = max(ok, key=lambda e: ((e['acc_T1.0'] + e['acc_T0.1']) / 2, -e['step']))
   return best
