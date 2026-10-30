@@ -1,0 +1,12 @@
+{
+ "evals": [
+  {
+   "step": 2,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-smoke/step2.ckpt",
+   "acc_T1.0": 0.215,
+   "acc_T0.1": 0.4
+  }
+ ],
+ "train_seconds": 295.2,
+ "peak_gpu_mem_mib": 20687
+}

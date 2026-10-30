@@ -1,0 +1,2 @@
+{"step": 1, "lr": 2e-07, "reward": 0.1875, "solved_any": 0.5625, "kept_rows": 144, "rollout_s": 71.8, "resp_chars": 537.96875, "loss": -0.0009288967194152065, "grad_norm": 0.08583389222621918, "action_logp": -0.06747079940874186, "train_s": 10.1, "elapsed_s": 82.2}
+{"step": 2, "lr": 4e-07, "reward": 0.15234375, "solved_any": 0.4375, "kept_rows": 104, "rollout_s": 69.6, "resp_chars": 539.859375, "loss": 0.015606705448590219, "grad_norm": 0.11170142143964767, "action_logp": -0.10825153264270952, "train_s": 7.1, "elapsed_s": 159.4}
