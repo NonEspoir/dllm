@@ -1,0 +1,37 @@
+{
+ "args": {
+  "run_name": "1030-smoke-sft-lr1e-4",
+  "select": "hard_pass",
+  "init_ckpt": "/root/autodl-tmp/checkpoints/tinygsm/mdlm.ckpt",
+  "lr": 0.0001,
+  "schedule": "cosine",
+  "warmup_frac": 0.05,
+  "min_lr_frac": 0.1,
+  "weight_decay": 0.0,
+  "epochs": 1,
+  "batch": 64,
+  "accum": 1,
+  "grad_clip": 1.0,
+  "val_frac": 0.02,
+  "save_every_epoch": 1,
+  "seed": 1,
+  "max_steps": 20,
+  "dry_run": false
+ },
+ "data_stats": {
+  "select": "hard_pass",
+  "records": 6203,
+  "too_long": 0,
+  "train": 6079,
+  "val": 124,
+  "loss_tokens_per_example": 450.2182922363281,
+  "answer_tokens_per_example": 167.01080322265625,
+  "steps_per_epoch": 20,
+  "total_steps": 20
+ },
+ "git_commit": "929b31e7aa67ad519756896cc855c3d9e182d977",
+ "git_dirty": 3,
+ "gpu": "NVIDIA A800 80GB PCIe",
+ "start": "2026-10-30T14:20:49",
+ "ckpt_dir": "/root/autodl-tmp/sft_ckpt/1030-smoke-sft-lr1e-4"
+}

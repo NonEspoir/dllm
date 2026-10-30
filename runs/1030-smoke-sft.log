@@ -1,0 +1,41 @@
+/root/miniconda3/lib/python3.12/site-packages/lightning/pytorch/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.6.0, which is newer than your current Lightning version: v2.5.1
+/root/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1617: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be deprecated in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+/root/autodl-tmp/dllm/code/scripts/sft.py:261: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:835.)
+  run_loss += float(loss) * args.accum
+{
+ "select": "hard_pass",
+ "records": 6203,
+ "too_long": 0,
+ "train": 6079,
+ "val": 124,
+ "loss_tokens_per_example": 450.2182922363281,
+ "answer_tokens_per_example": 167.01080322265625,
+ "steps_per_epoch": 20,
+ "total_steps": 20
+}
+epoch 0 val_loss 0.2921
+{"epoch": 1, "step": 20, "val_loss": 0.2921049657719087, "elapsed_s": 8.4, "ckpt": "/root/autodl-tmp/sft_ckpt/1030-smoke-sft-lr0/epoch1.ckpt"}
+/root/miniconda3/lib/python3.12/site-packages/lightning/pytorch/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.6.0, which is newer than your current Lightning version: v2.5.1
+/root/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1617: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be deprecated in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+/root/autodl-tmp/dllm/code/scripts/sft.py:261: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:835.)
+  run_loss += float(loss) * args.accum
+{
+ "select": "hard_pass",
+ "records": 6203,
+ "too_long": 0,
+ "train": 6079,
+ "val": 124,
+ "loss_tokens_per_example": 450.2182922363281,
+ "answer_tokens_per_example": 167.01080322265625,
+ "steps_per_epoch": 20,
+ "total_steps": 20
+}
+epoch 0 val_loss 0.2921
+{"epoch": 1, "step": 20, "val_loss": 0.09778520533903128, "elapsed_s": 8.3, "ckpt": "/root/autodl-tmp/sft_ckpt/1030-smoke-sft-lr1e-4/epoch1.ckpt"}
+1030-smoke-eval-base 0.0900 vs 1030-smoke-eval-smoke-sft-lr0 0.0900: only-b-correct=0 only-a-correct=0 McNemar p=1.000
+1030-smoke-sft-lr0 loss first/last 0.3062 0.295
+1030-smoke-sft-lr1e-4 loss first/last 0.1852 0.1116

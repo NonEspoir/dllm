@@ -1,0 +1,118 @@
+sft_val n 125 answer tokens/ex 166.94400024414062
+tinygsm n 256 answer tokens/ex 135.03515625
+base {
+ "sft_val": {
+  "0.1": {
+   "answer": 0.2955,
+   "eos": 0.0,
+   "pad": 0.0
+  },
+  "0.5": {
+   "answer": 0.4723,
+   "eos": 0.1303,
+   "pad": 0.0013
+  },
+  "0.9": {
+   "answer": 1.7352,
+   "eos": 0.9364,
+   "pad": 0.0052
+  },
+  "nelbo": 0.2817
+ },
+ "tinygsm": {
+  "0.1": {
+   "answer": 0.3039,
+   "eos": 0.0,
+   "pad": 0.0
+  },
+  "0.5": {
+   "answer": 0.5347,
+   "eos": 0.0028,
+   "pad": 0.0
+  },
+  "0.9": {
+   "answer": 2.0722,
+   "eos": 1.2321,
+   "pad": 0.0077
+  },
+  "nelbo": 0.248
+ }
+}
+/root/autodl-tmp/sft_ckpt/1030-smoke-sft-lr1e-4/epoch1.ckpt {
+ "sft_val": {
+  "0.1": {
+   "answer": 0.0086,
+   "eos": 0.0,
+   "pad": 0.0
+  },
+  "0.5": {
+   "answer": 0.0487,
+   "eos": 0.0246,
+   "pad": 0.0003
+  },
+  "0.9": {
+   "answer": 0.7632,
+   "eos": 0.9408,
+   "pad": 0.0051
+  },
+  "nelbo": 0.094
+ },
+ "tinygsm": {
+  "0.1": {
+   "answer": 0.057,
+   "eos": 0.0,
+   "pad": 0.0
+  },
+  "0.5": {
+   "answer": 0.0955,
+   "eos": 0.0018,
+   "pad": 0.0
+  },
+  "0.9": {
+   "answer": 0.9689,
+   "eos": 1.1197,
+   "pad": 0.0071
+  },
+  "nelbo": 0.0898
+ }
+}
+sft_val n 125 answer tokens/ex 166.94400024414062
+tinygsm n 256 answer tokens/ex 135.03515625
+raw {
+ "sft_val": {
+  "0.1": {
+   "answer": 0.4308,
+   "eos": 0.0,
+   "pad": 0.0
+  },
+  "0.5": {
+   "answer": 0.5799,
+   "eos": 0.1056,
+   "pad": 0.0008
+  },
+  "0.9": {
+   "answer": 1.9303,
+   "eos": 1.0965,
+   "pad": 0.0062
+  },
+  "nelbo": 0.3339
+ },
+ "tinygsm": {
+  "0.1": {
+   "answer": 0.4747,
+   "eos": 0.0,
+   "pad": 0.0
+  },
+  "0.5": {
+   "answer": 0.6691,
+   "eos": 0.006,
+   "pad": 0.0
+  },
+  "0.9": {
+   "answer": 2.2562,
+   "eos": 1.25,
+   "pad": 0.0069
+  },
+  "nelbo": 0.2911
+ }
+}
