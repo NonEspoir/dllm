@@ -1,0 +1,33 @@
+{
+ "args": {
+  "run_name": "1030-grpo-smoke-fmt",
+  "init_ckpt": "/root/autodl-tmp/checkpoints/tinygsm/mdlm.ckpt",
+  "lr": 1e-06,
+  "steps": 1,
+  "warmup": 1,
+  "questions": 4,
+  "group": 4,
+  "rollout_steps": 32,
+  "temperature": 1.0,
+  "rounds": 8,
+  "eps_low": 0.2,
+  "eps_high": 0.28,
+  "no_std": true,
+  "no_pad": false,
+  "format_reward": 0.1,
+  "grad_clip": 1.0,
+  "chunk": 8,
+  "eval_every": 10,
+  "eval_split": "dev200",
+  "eval_steps": 512,
+  "no_eval": true,
+  "seed": 1
+ },
+ "pool": 6312,
+ "rl_exclude": 161,
+ "separator": "\\n",
+ "git_commit": "d12844736c0719e5b06ff23b6117721747d2162d",
+ "git_dirty": 10,
+ "gpu": "NVIDIA A800 80GB PCIe",
+ "start": "2026-10-30T19:21:10"
+}

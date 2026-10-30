@@ -1,0 +1,5 @@
+1030-eval-base-s512-T1.0: 1000 responses, mismatches 0, categories {'correct': 180, 'runtime': 383, 'wrong': 292, 'no_number': 137, 'syntax': 7, 'no_fn': 1}
+1030-eval-base-s512-T0.1: 1000 responses, mismatches 0, categories {'correct': 386, 'wrong': 421, 'runtime': 138, 'no_number': 53, 'syntax': 2}
+1030-eval-sft-v1b-lr3e-5-e2-s512-T1.0: 1000 responses, mismatches 0, categories {'correct': 137, 'runtime': 421, 'wrong': 234, 'syntax': 33, 'no_number': 175}
+1030-eval-sft-v1b-lr3e-5-e2-s512-T0.1: 1000 responses, mismatches 0, categories {'correct': 385, 'wrong': 386, 'runtime': 178, 'no_number': 51}
+ALL PASSED
