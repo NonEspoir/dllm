@@ -1,0 +1,25 @@
+{
+ "evals": [
+  {
+   "step": 1,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-smoke-d5/step1.ckpt",
+   "acc_T1.0": 0.205,
+   "acc_T0.1": 0.385,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 2,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-smoke-d5/step2.ckpt",
+   "acc_T1.0": 0.215,
+   "acc_T0.1": 0.405
+  },
+  {
+   "step": 3,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-smoke-d5/step3.ckpt",
+   "acc_T1.0": 0.205,
+   "acc_T0.1": 0.385
+  }
+ ],
+ "train_seconds": 465.2,
+ "peak_gpu_mem_mib": 21329
+}

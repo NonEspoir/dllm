@@ -9,7 +9,10 @@ One step:
      log-probs recomputed (fp32 log-softmax) with gradient, chunk by chunk,
      backward per chunk (the loss is a sum over actions divided by the exact
      total action count, so chunked backward gives the same gradient);
-  5. one on-policy update (old = new.detach(): ratio is 1, clip inactive).
+  5. one on-policy update (old = new.detach(): ratio is 1, clip inactive), or
+     with --updates K > 1 (D32): old log-probs computed once for the batch,
+     then K updates on the same rollouts and rounds; the ratio moves away from
+     1 and the clip [1 - eps_low, 1 + eps_high] bounds each batch's change.
 Policy = eval-mode network (no dropout), the one that is evaluated.
 
 Every --eval_every steps: save a checkpoint (scripts/sft.py layout) and run
@@ -90,6 +93,13 @@ def main():
   p.add_argument('--eval_steps', type=int, default=512)
   p.add_argument('--no_eval', action='store_true')
   p.add_argument('--seed', type=int, default=1)
+  p.add_argument('--updates', type=int, default=1,
+                 help='updates per rollout batch (D32); 1 = on-policy, clip inactive')
+  p.add_argument('--keep_ckpts', choices=['all', 'best_last'], default='all',
+                 help='best_last: keep only the best-so-far (mean dev acc over '
+                      'both temperatures, ties -> earlier) and the latest checkpoint')
+  p.add_argument('--pool_size', type=int, default=0,
+                 help='sanity check: train on the first N questions only (cycling)')
   args = p.parse_args()
 
   from rl import grpo, logprob, rollout
@@ -108,6 +118,8 @@ def main():
   opt = torch.optim.AdamW(params, lr=args.lr, betas=(0.9, 0.999), eps=1e-8,
                           weight_decay=0.0)
   pool, n_excl = question_pool(args.seed)
+  if args.pool_size:
+    pool = pool[:args.pool_size]
 
   run_dir = os.path.join(REPO, 'runs', args.run_name)
   ckpt_dir = os.path.join(CKPT_ROOT, args.run_name)
@@ -170,23 +182,42 @@ def main():
       n_act = grpo.action_counts(rs, tokens, tok.pad_token_id,
                                  count_pad=not args.no_pad).sum().reshape(1)
       rounds, w = logprob.select_rounds(rs, args.rounds, generator=gen)
-      tot_loss, lp_sum, lp_n = 0.0, 0.0, 0
-      for s in range(0, len(idx), args.chunk):
-        c = slice(s, s + args.chunk)
-        lp, act = logprob.logp_at_rounds(model, tokens[c], rs[c], rounds[c],
-                                         args.temperature,
-                                         count_pad=not args.no_pad,
-                                         chunk=args.chunk * args.rounds)
-        loss, st = grpo.grpo_loss(lp, lp.detach(), act, w[c], a[c], n_act,
-                                  args.eps_low, args.eps_high)
-        loss.backward()
-        tot_loss += float(loss)
-        lp_sum += float(lp.detach()[act].sum())
-        lp_n += int(act.sum())
-      gnorm = float(torch.nn.utils.clip_grad_norm_(params, args.grad_clip))
-      opt.step()
-      rec.update({'loss': tot_loss, 'grad_norm': gnorm,
-                  'action_logp': lp_sum / max(lp_n, 1)})
+      chunks = [slice(s, s + args.chunk) for s in range(0, len(idx), args.chunk)]
+      old = None
+      if args.updates > 1:  # old log-probs of this batch, same code path and rounds
+        with torch.no_grad():
+          old = [logprob.logp_at_rounds(model, tokens[c], rs[c], rounds[c],
+                                        args.temperature, count_pad=not args.no_pad,
+                                        chunk=args.chunk * args.rounds)[0]
+                 for c in chunks]
+      gnorms, clip_fracs, ratio_means = [], [], []
+      for u in range(args.updates):
+        opt.zero_grad(set_to_none=True)
+        tot_loss, lp_sum, lp_n, n_clip, r_sum = 0.0, 0.0, 0, 0.0, 0.0
+        for ci, c in enumerate(chunks):
+          lp, act = logprob.logp_at_rounds(model, tokens[c], rs[c], rounds[c],
+                                           args.temperature,
+                                           count_pad=not args.no_pad,
+                                           chunk=args.chunk * args.rounds)
+          ref = lp.detach() if old is None else old[ci]
+          loss, st = grpo.grpo_loss(lp, ref, act, w[c], a[c], n_act,
+                                    args.eps_low, args.eps_high)
+          loss.backward()
+          k = int(act.sum())
+          tot_loss += float(loss.detach())
+          lp_sum += float(lp.detach()[act].sum())
+          lp_n += k
+          n_clip += st['clip_frac'] * k
+          r_sum += st['ratio_mean'] * k
+        gnorms.append(float(torch.nn.utils.clip_grad_norm_(params, args.grad_clip)))
+        opt.step()
+        clip_fracs.append(n_clip / max(lp_n, 1))
+        ratio_means.append(r_sum / max(lp_n, 1))
+        if u == 0:
+          first_loss, first_logp = tot_loss, lp_sum / max(lp_n, 1)
+      rec.update({'loss': first_loss, 'grad_norm': sum(gnorms) / len(gnorms),
+                  'action_logp': first_logp,
+                  'clip_frac_last': clip_fracs[-1], 'ratio_mean_last': ratio_means[-1]})
     else:
       rec.update({'loss': 0.0, 'grad_norm': 0.0, 'action_logp': None, 'skipped': True})
     rec['train_s'] = round(time.time() - t0, 1)
@@ -213,6 +244,16 @@ def main():
         e[f'acc_T{T}'] = run_eval(path, name, T, args.eval_steps, args.eval_split)
       evals.append(e)
       print('EVAL', json.dumps(e), flush=True)
+      if args.keep_ckpts == 'best_last':
+        def score(x):
+          v = [x.get(f'acc_T{T}') for T in (1.0, 0.1)]
+          return None if None in v else sum(v) / 2
+        scored = [x for x in evals if score(x) is not None]
+        best = max(scored, key=lambda x: (score(x), -x['step'])) if scored else None
+        for x in evals[:-1]:
+          if x is not best and os.path.exists(x['ckpt']):
+            os.remove(x['ckpt'])
+            x['ckpt_deleted'] = True
 
   log.close()
   with open(os.path.join(run_dir, 'metrics.json'), 'w') as f:

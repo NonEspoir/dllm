@@ -1,0 +1,15 @@
+git_commit: 6fbc126b6f58b1d92c2ff19fd5e2b7a756ec6a8c
+git_dirty: 12
+split: dev200
+sampler: fast_ancestral
+steps: 512
+temperature: 0.1
+batch: 200
+seed: 1
+ckpt: /root/autodl-tmp/rl_ckpt/1030-grpo-smoke-d5/step2.ckpt
+extra: sampler.skip_unchanged=true
+gpu: NVIDIA A800 80GB PCIe
+start: 2026-10-30T23:14:12+08:00
+end: 2026-10-30T23:15:26+08:00
+wall_seconds: 74
+peak_gpu_mem_mib: 14559
