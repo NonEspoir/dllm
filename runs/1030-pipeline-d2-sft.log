@@ -161,3 +161,5 @@ base: T=1.0 18.0 (1030-eval-base-s512-T1.0), T=0.1 38.6 (1030-eval-base-s512-T0.
   }
  }
 }
+=== 2026-10-30T19:16:41+08:00 pipeline done
+=== no shutdown (SHUTDOWN=0, KEEP_ALIVE absent)

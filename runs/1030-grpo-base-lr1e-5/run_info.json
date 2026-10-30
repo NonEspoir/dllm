@@ -1,0 +1,33 @@
+{
+ "args": {
+  "run_name": "1030-grpo-base-lr1e-5",
+  "init_ckpt": "/root/autodl-tmp/checkpoints/tinygsm/mdlm.ckpt",
+  "lr": 1e-05,
+  "steps": 50,
+  "warmup": 5,
+  "questions": 32,
+  "group": 8,
+  "rollout_steps": 128,
+  "temperature": 1.0,
+  "rounds": 8,
+  "eps_low": 0.2,
+  "eps_high": 0.28,
+  "no_std": false,
+  "no_pad": false,
+  "format_reward": 0.0,
+  "grad_clip": 1.0,
+  "chunk": 8,
+  "eval_every": 10,
+  "eval_split": "dev200",
+  "eval_steps": 512,
+  "no_eval": false,
+  "seed": 1
+ },
+ "pool": 6312,
+ "rl_exclude": 161,
+ "separator": "\\n",
+ "git_commit": "2f8edf648b061e660b46bd63f9af61315d2922b2",
+ "git_dirty": 25,
+ "gpu": "NVIDIA A800 80GB PCIe",
+ "start": "2026-10-30T20:46:10"
+}

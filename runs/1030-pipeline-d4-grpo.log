@@ -1,1 +1,81 @@
 === 2026-10-30T18:37:57+08:00 pipeline start: LRS='1e-6 3e-6 1e-5' SHUTDOWN=1
+=== 2026-10-30T19:16:41+08:00 process 25569 finished
+=== 2026-10-30T19:16:41+08:00 start 1030-grpo-base-lr1e-6
+=== 2026-10-30T19:21:39+08:00 extra pipeline start (waiting for 27205)
+=== 2026-10-30T20:01:13+08:00 end 1030-grpo-base-lr1e-6 exit=0
+EVAL {"step": 10, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-6/step10.ckpt", "acc_T1.0": 0.21, "acc_T0.1": 0.395}
+EVAL {"step": 20, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-6/step20.ckpt", "acc_T1.0": 0.215, "acc_T0.1": 0.4}
+EVAL {"step": 30, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-6/step30.ckpt", "acc_T1.0": 0.21, "acc_T0.1": 0.39}
+EVAL {"step": 40, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-6/step40.ckpt", "acc_T1.0": 0.21, "acc_T0.1": 0.4}
+EVAL {"step": 50, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-6/step50.ckpt", "acc_T1.0": 0.21, "acc_T0.1": 0.395}
+=== 2026-10-30T20:01:13+08:00 start 1030-grpo-base-lr3e-6
+=== 2026-10-30T20:45:58+08:00 end 1030-grpo-base-lr3e-6 exit=0
+EVAL {"step": 10, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr3e-6/step10.ckpt", "acc_T1.0": 0.22, "acc_T0.1": 0.4}
+EVAL {"step": 20, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr3e-6/step20.ckpt", "acc_T1.0": 0.215, "acc_T0.1": 0.405}
+EVAL {"step": 30, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr3e-6/step30.ckpt", "acc_T1.0": 0.215, "acc_T0.1": 0.385}
+EVAL {"step": 40, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr3e-6/step40.ckpt", "acc_T1.0": 0.225, "acc_T0.1": 0.4}
+EVAL {"step": 50, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr3e-6/step50.ckpt", "acc_T1.0": 0.215, "acc_T0.1": 0.39}
+=== 2026-10-30T20:45:58+08:00 start 1030-grpo-base-lr1e-5
+=== 2026-10-30T21:30:45+08:00 end 1030-grpo-base-lr1e-5 exit=0
+EVAL {"step": 10, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-5/step10.ckpt", "acc_T1.0": 0.22, "acc_T0.1": 0.395}
+EVAL {"step": 20, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-5/step20.ckpt", "acc_T1.0": 0.215, "acc_T0.1": 0.395}
+EVAL {"step": 30, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-5/step30.ckpt", "acc_T1.0": 0.215, "acc_T0.1": 0.395}
+EVAL {"step": 40, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-5/step40.ckpt", "acc_T1.0": 0.22, "acc_T0.1": 0.39}
+EVAL {"step": 50, "ckpt": "/root/autodl-tmp/rl_ckpt/1030-grpo-base-lr1e-5/step50.ckpt", "acc_T1.0": 0.21, "acc_T0.1": 0.39}
+
+## 1030-grpo-base-lr1e-6  (lr 1e-06, 32 q x G=8, rollout 128 steps, format_reward 0.0, std norm True)
+
+| steps | reward | correct | solved any | kept rows | action logp | grad norm | s/step |
+|---|---|---|---|---|---|---|---|
+| 1-10 | 0.143 | 0.143 | 0.47 | 120 | -0.0874 | 0.096 | 38 |
+| 11-20 | 0.146 | 0.146 | 0.51 | 131 | -0.0831 | 0.102 | 37 |
+| 21-30 | 0.147 | 0.147 | 0.47 | 122 | -0.0773 | 0.090 | 38 |
+| 31-40 | 0.127 | 0.127 | 0.45 | 116 | -0.0780 | 0.099 | 39 |
+| 41-50 | 0.161 | 0.161 | 0.49 | 124 | -0.0796 | 0.079 | 38 |
+
+| step | T=1 | p vs base | T=0.1 | p vs base |
+|---|---|---|---|---|
+| base | 21.5 | — | 39.0 | — |
+| 10 | 21.0 | 1 (+0/-1) | 39.5 | 1 (+1/-0) |
+| 20 | 21.5 | 1 (+1/-1) | 40.0 | 0.5 (+2/-0) |
+| 30 | 21.0 | 1 (+0/-1) | 39.0 | 1 (+1/-1) |
+| 40 | 21.0 | 1 (+0/-1) | 40.0 | 0.625 (+3/-1) |
+| 50 | 21.0 | 1 (+0/-1) | 39.5 | 1 (+2/-1) |
+
+## 1030-grpo-base-lr3e-6  (lr 3e-06, 32 q x G=8, rollout 128 steps, format_reward 0.0, std norm True)
+
+| steps | reward | correct | solved any | kept rows | action logp | grad norm | s/step |
+|---|---|---|---|---|---|---|---|
+| 1-10 | 0.141 | 0.141 | 0.47 | 118 | -0.0883 | 0.095 | 38 |
+| 11-20 | 0.145 | 0.145 | 0.51 | 130 | -0.0776 | 0.099 | 38 |
+| 21-30 | 0.145 | 0.145 | 0.48 | 122 | -0.0783 | 0.079 | 38 |
+| 31-40 | 0.130 | 0.130 | 0.46 | 117 | -0.0771 | 0.096 | 39 |
+| 41-50 | 0.159 | 0.159 | 0.48 | 123 | -0.0834 | 0.090 | 38 |
+
+| step | T=1 | p vs base | T=0.1 | p vs base |
+|---|---|---|---|---|
+| base | 21.5 | — | 39.0 | — |
+| 10 | 22.0 | 1 (+2/-1) | 40.0 | 0.625 (+3/-1) |
+| 20 | 21.5 | 1 (+1/-1) | 40.5 | 0.25 (+3/-0) |
+| 30 | 21.5 | 1 (+1/-1) | 38.5 | 1 (+1/-2) |
+| 40 | 22.5 | 0.5 (+2/-0) | 40.0 | 0.625 (+3/-1) |
+| 50 | 21.5 | 1 (+1/-1) | 39.0 | 1 (+2/-2) |
+
+## 1030-grpo-base-lr1e-5  (lr 1e-05, 32 q x G=8, rollout 128 steps, format_reward 0.0, std norm True)
+
+| steps | reward | correct | solved any | kept rows | action logp | grad norm | s/step |
+|---|---|---|---|---|---|---|---|
+| 1-10 | 0.142 | 0.142 | 0.47 | 118 | -0.0846 | 0.089 | 38 |
+| 11-20 | 0.145 | 0.145 | 0.52 | 132 | -0.0787 | 0.097 | 38 |
+| 21-30 | 0.151 | 0.151 | 0.48 | 124 | -0.0798 | 0.084 | 38 |
+| 31-40 | 0.129 | 0.129 | 0.47 | 119 | -0.0739 | 0.086 | 39 |
+| 41-50 | 0.159 | 0.159 | 0.48 | 122 | -0.0714 | 0.078 | 38 |
+
+| step | T=1 | p vs base | T=0.1 | p vs base |
+|---|---|---|---|---|
+| base | 21.5 | — | 39.0 | — |
+| 10 | 22.0 | 1 (+1/-0) | 39.5 | 1 (+3/-2) |
+| 20 | 21.5 | 1 (+1/-1) | 39.5 | 1 (+3/-2) |
+| 30 | 21.5 | 1 (+1/-1) | 39.5 | 1 (+3/-2) |
+| 40 | 22.0 | 1 (+3/-2) | 39.0 | 1 (+3/-3) |
+| 50 | 21.0 | 1 (+2/-3) | 39.0 | 1 (+3/-3) |
