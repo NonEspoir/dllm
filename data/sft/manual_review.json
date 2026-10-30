@@ -1,0 +1,167 @@
+{
+ "reviewer": "Claude (claude-opus-5-5), 2026-10-30, one pass, single reviewer",
+ "scope": "every DeepSeek adjudication verdict program_correct (75) and every audit verdict wrong (46); audit verdict ambiguous (32) only skimmed",
+ "labels": {
+  "process_error": {
+   "meaning": "执行结果 == gold，但推理过程是错的（例如把答案直接写进中间量）",
+   "gsm8k_index": [
+    29,
+    1518,
+    2875,
+    5294
+   ]
+  },
+  "audit_false_positive": {
+   "meaning": "DeepSeek 盲审误报，程序推理正确",
+   "gsm8k_index": [
+    103,
+    1286,
+    1293,
+    1388,
+    1729,
+    2057,
+    2234,
+    2571,
+    2685,
+    2801,
+    3414,
+    3448,
+    3627,
+    3646,
+    3719,
+    3930,
+    4353,
+    4498,
+    4576,
+    5013,
+    5197,
+    5273,
+    6209,
+    6398,
+    6465,
+    6619,
+    6861,
+    6882,
+    7236
+   ]
+  },
+  "gold_wrong_program_right": {
+   "meaning": "GSM8K 标准答案错，DeepSeek 程序对（Claude 逐条手算确认）",
+   "gsm8k_index": [
+    167,
+    228,
+    356,
+    474,
+    618,
+    1052,
+    1081,
+    1138,
+    1593,
+    1776,
+    1958,
+    2338,
+    2620,
+    2770,
+    2867,
+    2882,
+    2937,
+    3001,
+    3263,
+    3363,
+    3529,
+    3715,
+    4099,
+    4100,
+    4105,
+    4235,
+    4428,
+    4778,
+    4796,
+    5134,
+    5181,
+    5598,
+    6768,
+    7401,
+    7444,
+    7472
+   ]
+  },
+  "question_ambiguous": {
+   "meaning": "题目有歧义或缺条件，按字面读和 GSM8K 的读法都说得通",
+   "gsm8k_index": [
+    229,
+    282,
+    399,
+    424,
+    459,
+    483,
+    486,
+    951,
+    1038,
+    1085,
+    1213,
+    1255,
+    1283,
+    1337,
+    1486,
+    1756,
+    2065,
+    2069,
+    2189,
+    2356,
+    2673,
+    2790,
+    3145,
+    3304,
+    3588,
+    3907,
+    4117,
+    4365,
+    4556,
+    4795,
+    5218,
+    5307,
+    5416,
+    5436,
+    6272,
+    6409,
+    7177,
+    7457
+   ]
+  },
+  "gold_questionable_program_follows_gold": {
+   "meaning": "DeepSeek 盲审认为按字面应得另一个答案，程序跟随 GSM8K 的读法；多数属于读法之争",
+   "gsm8k_index": [
+    570,
+    2342,
+    2364,
+    2472,
+    2744,
+    4381,
+    5178,
+    5804,
+    6034,
+    7066
+   ]
+  },
+  "gold_wrong_program_follows_gold": {
+   "meaning": "程序和 GSM8K 犯了同样的错",
+   "gsm8k_index": [
+    803
+   ]
+  },
+  "program_wrong": {
+   "meaning": "DeepSeek 的裁决错了，GSM8K 对",
+   "gsm8k_index": [
+    3008
+   ]
+  },
+  "cosmetic_only": {
+   "meaning": "注释或变量名有误，计算正确",
+   "gsm8k_index": [
+    3162,
+    7235
+   ]
+  }
+ }
+}
