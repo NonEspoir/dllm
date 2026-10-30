@@ -1,0 +1,17 @@
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:835.)
+  print(f'[gpu] T={T}: before update max |ratio-1| {r_err:.1e}; loss {float(loss):.4f}; '
+[cpu] stratified estimator: exact [-11.51462543440405, 7.888904464291048, 5.516160183735142] vs mean of 20000 draws [-11.51, 7.933, 5.446], max err 0.070; weights sum to #non-empty rounds: True
+[gpu] T=1.0: canvas rebuilt for 32 rounds, mismatching tokens 0
+[gpu] T=1.0: every generated position is an action of exactly one round: True
+[gpu] T=1.0: sampler precision (bf16 log-softmax): per-token max |diff| 0.00e+00, per-trajectory max 0.00e+00
+[gpu] T=1.0: training precision (fp32 log-softmax) vs sampler: per-token max 6.09e-02 mean 2.11e-03, share > 1e-2 0.078; per-trajectory max 0.427 (trajectory log-prob ~ -72.3) [reported, not a pass/fail]
+[gpu] T=1.0: before update max |ratio-1| 0.0e+00; loss 0.0238; grad norm 2.867e-01; {'ratio_mean': 1.0, 'clip_frac': 0.0, 'logp_mean': -0.15833348035812378}
+[gpu] T=0.7: canvas rebuilt for 32 rounds, mismatching tokens 0
+[gpu] T=0.7: every generated position is an action of exactly one round: True
+[gpu] T=0.7: sampler precision (bf16 log-softmax): per-token max |diff| 0.00e+00, per-trajectory max 0.00e+00
+[gpu] T=0.7: training precision (fp32 log-softmax) vs sampler: per-token max 1.08e-01 mean 1.56e-03, share > 1e-2 0.041; per-trajectory max 0.401 (trajectory log-prob ~ -21.5) [reported, not a pass/fail]
+[gpu] T=0.7: recomputed at T=1 instead: per-token mean |diff| 1.30e-02 (right T: 0.00e+00)
+[gpu] T=0.7: before update max |ratio-1| 0.0e+00; loss 0.0238; grad norm 2.733e-01; {'ratio_mean': 1.0, 'clip_frac': 0.0, 'logp_mean': -0.05697571113705635}
+[gpu] generate(): 8 rollouts, rewards [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], mixed groups 0 rows
+   first response: def simple_math_problem() -> int: |     """ |     Mimi picked up 2 dozen seashells on the beach. |      Kyle found twice as many shells as Mimi and put them in his pocket. |     Leigh grabbed one-third of the
+ALL PASSED
