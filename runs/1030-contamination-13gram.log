@@ -1,0 +1,21 @@
+8792 GSM8K questions, 298956 distinct 13-grams, 17 TinyGSM shards
+  train-00006-of-00017.parquet: 696830 rows, 58 s
+  train-00005-of-00017.parquet: 696830 rows, 58 s
+  train-00013-of-00017.parquet: 696830 rows, 58 s
+  train-00011-of-00017.parquet: 696830 rows, 58 s
+  train-00012-of-00017.parquet: 696830 rows, 58 s
+  train-00007-of-00017.parquet: 696830 rows, 59 s
+  train-00004-of-00017.parquet: 696830 rows, 59 s
+  train-00002-of-00017.parquet: 696830 rows, 61 s
+  train-00014-of-00017.parquet: 696830 rows, 61 s
+  train-00001-of-00017.parquet: 696830 rows, 62 s
+  train-00000-of-00017.parquet: 696830 rows, 62 s
+  train-00003-of-00017.parquet: 696830 rows, 62 s
+  train-00008-of-00017.parquet: 696830 rows, 67 s
+  train-00010-of-00017.parquet: 696830 rows, 67 s
+  train-00009-of-00017.parquet: 696830 rows, 74 s
+  train-00016-of-00017.parquet: 696829 rows, 95 s
+  train-00015-of-00017.parquet: 696830 rows, 95 s
+test {'questions': 1319, 'checkable': 1319, 'too_short': 0, 'any_13gram_in_tinygsm': 29, 'any_13gram_rate': 0.022, 'best_item_coverage_ge_0.5': 1, 'best_item_coverage_ge_0.5_rate': 0.0008, 'best_item_coverage_ge_0.8': 0, 'mean_best_item_coverage': 0.0027}
+dev {'questions': 1000, 'checkable': 1000, 'too_short': 0, 'any_13gram_in_tinygsm': 553, 'any_13gram_rate': 0.553, 'best_item_coverage_ge_0.5': 130, 'best_item_coverage_ge_0.5_rate': 0.13, 'best_item_coverage_ge_0.8': 64, 'mean_best_item_coverage': 0.18}
+train {'questions': 6473, 'checkable': 6471, 'too_short': 2, 'any_13gram_in_tinygsm': 3588, 'any_13gram_rate': 0.5545, 'best_item_coverage_ge_0.5': 653, 'best_item_coverage_ge_0.5_rate': 0.1009, 'best_item_coverage_ge_0.8': 344, 'mean_best_item_coverage': 0.1605}
