@@ -79,6 +79,10 @@ def main():
   p.add_argument('--eps_high', type=float, default=0.28)
   p.add_argument('--no_std', action='store_true', help='Dr. GRPO advantages')
   p.add_argument('--no_pad', action='store_true', help='D20 ablation')
+  p.add_argument('--format_reward', type=float, default=0.0,
+                 help='ablation (R36): reward for code that runs and returns a '
+                      'number but is wrong; 0 = binary reward (main line). Use '
+                      'with --no_std, or the group std rescales it to full strength')
   p.add_argument('--grad_clip', type=float, default=1.0)
   p.add_argument('--chunk', type=int, default=8, help='trajectories per backward')
   p.add_argument('--eval_every', type=int, default=10)
@@ -138,18 +142,24 @@ def main():
                           [r['response_ground_truth'] for r in batch],
                           group_size=args.group, num_steps=args.rollout_steps,
                           temperature=args.temperature, separator=sep,
-                          batch_size=args.questions * args.group)
+                          batch_size=args.questions * args.group,
+                          format_reward=args.format_reward)
     t_roll = time.time() - t0
 
     # 2-3. advantages, dynamic sampling
     adv = grpo.group_advantages(ro.rewards, ro.group, scale_std=not args.no_std)
     keep = grpo.mixed_groups(ro.rewards, ro.group)
     idx = keep.nonzero()[:, 0]
+    correct = (ro.rewards == 1.0).float()
     rec = {'step': step, 'lr': lr, 'reward': float(ro.rewards.mean()),
-           'solved_any': float(torch.stack([ro.rewards[ro.group == g].max()
+           'correct': float(correct.mean()),
+           'solved_any': float(torch.stack([correct[ro.group == g].max()
                                             for g in ro.group.unique()]).mean()),
            'kept_rows': int(len(idx)), 'rollout_s': round(t_roll, 1),
            'resp_chars': sum(map(len, ro.responses)) / len(ro.responses)}
+    if ro.categories is not None:
+      for k in ('wrong', 'no_number', 'runtime', 'syntax', 'no_fn'):
+        rec[f'cat_{k}'] = ro.categories.count(k) / len(ro.categories)
 
     # 4-5. loss and update
     t0 = time.time()
@@ -186,9 +196,10 @@ def main():
     print(json.dumps(rec), flush=True)
     if step % args.eval_every == 0 or step == 1:
       with open(os.path.join(run_dir, 'samples', f'step{step}.json'), 'w') as f:
-        json.dump([{'q': batch[int(g)]['prompt'], 'r': r, 'reward': float(x)}
-                   for g, r, x in zip(ro.group.tolist(), ro.responses,
-                                      ro.rewards.tolist())], f)
+        json.dump([{'q': batch[int(g)]['prompt'], 'r': r, 'reward': float(x),
+                    'cat': None if ro.categories is None else ro.categories[i]}
+                   for i, (g, r, x) in enumerate(zip(ro.group.tolist(), ro.responses,
+                                                     ro.rewards.tolist()))], f)
     del ro
     torch.cuda.empty_cache()
 

@@ -29,16 +29,18 @@ def main():
     with open(os.path.join(run, 'run_info.json')) as f:
       args = json.load(f)['args']
     print(f'\n## {name}  (lr {args["lr"]}, {args["questions"]} q x G={args["group"]}, '
-          f'rollout {args["rollout_steps"]} steps)\n')
+          f'rollout {args["rollout_steps"]} steps, format_reward '
+          f'{args.get("format_reward", 0.0)}, std norm {not args.get("no_std", False)})\n')
     log = []
     if os.path.exists(os.path.join(run, 'train_log.jsonl')):
       log = [json.loads(l) for l in open(os.path.join(run, 'train_log.jsonl'))]
-    print('| steps | reward | solved any | kept rows | action logp | grad norm | s/step |')
-    print('|---|---|---|---|---|---|---|')
+    print('| steps | reward | correct | solved any | kept rows | action logp | grad norm | s/step |')
+    print('|---|---|---|---|---|---|---|---|')
     for s in range(0, len(log), 10):
       w = log[s:s + 10]
       lp = [r['action_logp'] for r in w if r.get('action_logp') is not None]
       print(f"| {w[0]['step']}-{w[-1]['step']} | {sum(r['reward'] for r in w) / len(w):.3f} "
+            f"| {sum(r.get('correct', r['reward']) for r in w) / len(w):.3f} "
             f"| {sum(r['solved_any'] for r in w) / len(w):.2f} "
             f"| {sum(r['kept_rows'] for r in w) / len(w):.0f} "
             f"| {sum(lp) / max(len(lp), 1):.4f} "

@@ -21,6 +21,7 @@ import torch
 import fast_sampler
 import samplers
 import sandbox_gsm8k
+from rl import reward as rl_reward
 
 
 @dataclasses.dataclass
@@ -34,6 +35,7 @@ class Rollout:
   rewards: torch.Tensor        # (N,) float32, 1 = executes to the gold answer
   num_steps: int
   temperature: float
+  categories: list = None      # rl.reward.grade category per rollout (format_reward > 0)
 
 
 def encode_prompts(tokenizer, questions, separator):
@@ -66,20 +68,33 @@ def _score_one(args):
   return int(sandbox_gsm8k.evaluate_samples(response, gold, timeout_s=timeout_s))
 
 
+def _grade_one(args):
+  response, gold, timeout_s = args
+  return rl_reward.grade(response, gold, timeout_s=timeout_s)
+
+
 def score(responses, golds, timeout_s=5.0, procs=8):
   """Upstream scorer. It uses SIGALRM, so parallel scoring needs processes."""
+  return _map(_score_one, [(r, g, timeout_s) for r, g in zip(responses, golds)], procs)
+
+
+def grade(responses, golds, timeout_s=5.0, procs=8):
+  """rl.reward.grade categories (same verdict as score() on 'correct')."""
+  return _map(_grade_one, [(r, g, timeout_s) for r, g in zip(responses, golds)], procs)
+
+
+def _map(fn, jobs, procs):
   os.environ.setdefault('TOKENIZERS_PARALLELISM', 'false')  # forked workers
-  jobs = [(r, g, timeout_s) for r, g in zip(responses, golds)]
   if procs <= 1:
-    return [_score_one(j) for j in jobs]
+    return [fn(j) for j in jobs]
   with mp.get_context('fork').Pool(procs) as pool:
-    return pool.map(_score_one, jobs, chunksize=8)
+    return pool.map(fn, jobs, chunksize=8)
 
 
 @torch.no_grad()
 def generate(model, tokenizer, questions, golds, *, group_size, num_steps,
              temperature, separator, batch_size=256, skip_unchanged=True,
-             score_procs=8):
+             score_procs=8, format_reward=0.0):
   """G rollouts per question; rows of the same question are contiguous.
 
   The backbone runs in eval mode (no dropout): the policy is the eval-mode
@@ -109,10 +124,16 @@ def generate(model, tokenizer, questions, golds, *, group_size, num_steps,
   group = torch.cat(out['group'])
   assert (tokens != model.mask_index).all(), 'unrevealed positions left'
   responses = decode(tokenizer, tokens, prompt_len)
-  rewards = score(responses, [golds[int(g)] for g in group], procs=score_procs)
+  gold_rows = [golds[int(g)] for g in group]
+  categories = None
+  if format_reward:  # ablation switch (R36); main line is the binary reward
+    categories = grade(responses, gold_rows, procs=score_procs)
+    rewards = [rl_reward.reward(c, format_reward) for c in categories]
+  else:
+    rewards = score(responses, gold_rows, procs=score_procs)
   return Rollout(
     tokens=tokens, prompt_len=prompt_len,
     reveal_step=torch.cat(out['reveal_step']),
     sampler_logp=torch.cat(out['logp']), group=group, responses=responses,
     rewards=torch.tensor(rewards, dtype=torch.float32, device=tokens.device),
-    num_steps=num_steps, temperature=temperature)
+    num_steps=num_steps, temperature=temperature, categories=categories)
