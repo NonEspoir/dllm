@@ -1,0 +1,22 @@
+{
+ "rule": "best-epoch mean dev accuracy over T=1.0 and T=0.1; ties -> smaller lr",
+ "data": "v1b",
+ "steps": 512,
+ "lr": "1e-5",
+ "best_epoch": 1,
+ "mean_accuracy": 0.27,
+ "per_lr": {
+  "1e-4": {
+   "mean_accuracy": 0.2505,
+   "best_epoch": 1
+  },
+  "1e-5": {
+   "mean_accuracy": 0.27,
+   "best_epoch": 1
+  },
+  "3e-5": {
+   "mean_accuracy": 0.261,
+   "best_epoch": 2
+  }
+ }
+}
