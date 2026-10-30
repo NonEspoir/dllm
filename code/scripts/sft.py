@@ -14,14 +14,18 @@ So this script runs a plain PyTorch loop and reuses the upstream loss
 
 Data format is identical to pre-training (dataloader.get_tiny_gsm_dataset with
 train_on_prompt=False, train_on_pad=True, filter_too_long=True):
-  [BOS] question.strip() '\n' code.strip() [EOS] [PAD]*  (length 512)
-  loss mask: 0 on [BOS] question '\n', 1 on code, EOS and every PAD.
+  [BOS] question.strip() SEP code.strip() [EOS] [PAD]*  (length 512)
+  loss mask: 0 on [BOS] question SEP, 1 on code, EOS and every PAD.
+SEP is the two characters backslash + 'n' (tokens [76, 94]), not a newline:
+upstream's yaml writes `separator: '\\n'` in single quotes, which YAML does not
+unescape, and both pre-training (saved config) and GSM8K eval use it. A real
+newline here made SFT learn a layout the model is never evaluated with.
 
 Checkpoints keep the upstream Lightning layout (so scripts/eval_gsm8k.sh can
 load them with CKPT_PATH=...), weights only: `state_dict` and `ema.shadow_params`
 point to the same tensors, so evaluation uses exactly the trained weights.
 
-  python -m scripts.sft --run_name 1031-sft-v1-lr3e-5 --select hard_pass --lr 3e-5
+  python -m scripts.sft --run_name 1031-sft-v1b-lr3e-5 --select sft_v1b --lr 3e-5
 """
 import argparse
 import json
@@ -41,6 +45,7 @@ DEV_IDS = os.path.join(REPO, 'data/splits/gsm8k_dev_ids.json')
 BASE_CKPT = '/root/autodl-tmp/checkpoints/tinygsm/mdlm.ckpt'
 CKPT_ROOT = '/root/autodl-tmp/sft_ckpt'
 BLOCK = 512
+SEP = '\\n'  # literal backslash-n, see module docstring
 
 SELECT = {
   # v1: hard checks only (format, exec == gold, not a literal, <= 512 tokens)
@@ -68,7 +73,7 @@ def tokenize(rows, tokenizer):
   """Same layout as dataloader.get_tiny_gsm_dataset (no wrap, pad to 512)."""
   bos, eos, pad = (tokenizer.bos_token_id, tokenizer.eos_token_id,
                    tokenizer.pad_token_id)
-  sep = tokenizer('\n', add_special_tokens=False).input_ids
+  sep = tokenizer(SEP, add_special_tokens=False).input_ids
   ids, masks, kept, too_long = [], [], [], 0
   for r in rows:
     q = tokenizer(r['question'].strip(), add_special_tokens=False).input_ids
@@ -159,7 +164,7 @@ def save_ckpt(model, base, path):
 def main():
   p = argparse.ArgumentParser()
   p.add_argument('--run_name', required=True)
-  p.add_argument('--select', choices=sorted(SELECT), default='hard_pass')
+  p.add_argument('--select', choices=sorted(SELECT), default='sft_v1b')  # R29
   p.add_argument('--init_ckpt', default=BASE_CKPT)
   p.add_argument('--lr', type=float, default=3e-5)
   p.add_argument('--schedule', choices=['cosine', 'constant'], default='cosine')
@@ -234,6 +239,8 @@ def main():
   device = torch.device('cuda')
   config = build_config(args.init_ckpt)
   base = torch.load(args.init_ckpt, map_location='cpu', weights_only=False, mmap=True)
+  # Same separator as pre-training and as the GSM8K eval prompt.
+  assert SEP == config.data.separator == base['hyper_parameters']['config'].data.separator
   model = load_model(config, tokenizer, args.init_ckpt).to(device)
   model.backbone.train()
   params = [q for q in model._get_parameters() if q.requires_grad]

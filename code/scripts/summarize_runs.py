@@ -14,6 +14,7 @@
 import json
 import math
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -28,6 +29,21 @@ def read_info(run_dir):
         k, v = line.rstrip('\n').split(': ', 1)
         info[k] = v
   return info
+
+
+def sample_seconds(run_dir):
+  """Sampling time from the last tqdm bar in log.txt (excludes model load)."""
+  try:
+    with open(os.path.join(run_dir, 'log.txt')) as f:
+      bars = re.findall(r'sampling: 100%[^\[]*\[([\d:]+)<', f.read())
+  except FileNotFoundError:
+    return None
+  if not bars:
+    return None
+  sec = 0
+  for part in bars[-1].split(':'):
+    sec = 60 * sec + int(part)
+  return sec
 
 
 def metrics(run_dir):
@@ -49,6 +65,7 @@ def metrics(run_dir):
     'bootstrap_mean': res['accuracy'],
     'ci95': [res['accuracy_ci_lo'], res['accuracy_ci_hi']],
     'wall_seconds': int(info.get('wall_seconds', -1)),
+    'sample_seconds': sample_seconds(run_dir),
     'peak_gpu_mem_mib': int(info['peak_gpu_mem_mib'])
       if info.get('peak_gpu_mem_mib', '').isdigit() else None,
     'per_question_correct': correct,

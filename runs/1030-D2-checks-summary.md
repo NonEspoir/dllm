@@ -1,0 +1,30 @@
+## skip_unchanged speed (dev200, batch 200, T=1)
+
+| run | split | sampler | steps | T | acc | 95% CI | wall (s) | peak mem (MiB) |
+|---|---|---|---|---|---|---|---|---|
+| 1030-speed-skipfalse-dev200-s1024 | dev200 | fast_ancestral | 1024 | 1.0 | 17.00% (34/200) | [12.0, 22.0] | 221 | 7775 |
+| 1030-speed-skipfalse-dev200-s256 | dev200 | fast_ancestral | 256 | 1.0 | 18.00% (36/200) | [13.0, 23.5] | 66 | 7775 |
+| 1030-speed-skipfalse-dev200-s512 | dev200 | fast_ancestral | 512 | 1.0 | 21.00% (42/200) | [15.5, 26.5] | 117 | 7775 |
+| 1030-speed-skiptrue-dev200-s1024 | dev200 | fast_ancestral | 1024 | 1.0 | 16.00% (32/200) | [11.0, 21.0] | 92 | 8479 |
+| 1030-speed-skiptrue-dev200-s256 | dev200 | fast_ancestral | 256 | 1.0 | 18.00% (36/200) | [13.0, 23.5] | 57 | 14309 |
+| 1030-speed-skiptrue-dev200-s512 | dev200 | fast_ancestral | 512 | 1.0 | 21.50% (43/200) | [16.0, 27.0] | 77 | 13839 |
+
+1030-speed-skipfalse-dev200-s256 0.1800 vs 1030-speed-skiptrue-dev200-s256 0.1800: only-b-correct=0 only-a-correct=0 McNemar p=1.000
+1030-speed-skipfalse-dev200-s512 0.2100 vs 1030-speed-skiptrue-dev200-s512 0.2150: only-b-correct=1 only-a-correct=0 McNemar p=1.000
+1030-speed-skipfalse-dev200-s1024 0.1700 vs 1030-speed-skiptrue-dev200-s1024 0.1600: only-b-correct=1 only-a-correct=3 McNemar p=0.625
+
+sample_seconds relative to 256 steps without skip:
+  steps  256 skip false:   53 s  x1.00  same-as-noskip=True
+  steps  256 skip true :   44 s  x0.83  same-as-noskip=True
+  steps  512 skip false:  104 s  x1.96  same-as-noskip=True
+  steps  512 skip true :   63 s  x1.19  same-as-noskip=False
+  steps 1024 skip false:  208 s  x3.92  same-as-noskip=True
+  steps 1024 skip true :   78 s  x1.47  same-as-noskip=False
+
+## Layer 2 on dev 1000 (256 steps, T=1)
+
+| run | split | sampler | steps | T | acc | 95% CI | wall (s) | peak mem (MiB) |
+|---|---|---|---|---|---|---|---|---|
+| 1030-L2-ancestral-dev-s256-T1.0 | dev | ancestral | 256 | 1.0 | 15.00% (150/1000) | [12.8, 17.2] | 725 | 80859 |
+| 1030-sweep-fast-dev-s256-T1.0 | dev | fast_ancestral | 256 | 1.0 | 15.60% (156/1000) | [13.3, 18.1] | 277 | 7775 |
+1030-L2-ancestral-dev-s256-T1.0 0.1500 vs 1030-sweep-fast-dev-s256-T1.0 0.1560: only-b-correct=101 only-a-correct=95 McNemar p=0.721
