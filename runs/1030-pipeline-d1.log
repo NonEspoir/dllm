@@ -58,3 +58,4 @@
 | 1030-sweep-fast-dev-s512-T1.0 | dev | fast_ancestral | 512 | 1.0 | 17.80% (178/1000) | [15.5, 20.2] | 533 | 7775 |
 | 1030-sweep-fast-dev-s64-T0.1 | dev | fast_ancestral | 64 | 0.1 | 33.60% (336/1000) | [30.7, 36.6] | 84 | 16115 |
 | 1030-sweep-fast-dev-s64-T1.0 | dev | fast_ancestral | 64 | 1.0 | 10.40% (104/1000) | [8.6, 12.3] | 84 | 16115 |
+=== 2026-10-30T06:19:40+08:00 pipeline done
