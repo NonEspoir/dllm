@@ -1,0 +1,6 @@
+{
+ "evals": [],
+ "stopped_early": null,
+ "train_seconds": 216.9,
+ "peak_gpu_mem_mib": 22033
+}
