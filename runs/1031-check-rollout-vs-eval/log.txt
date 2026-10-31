@@ -1,0 +1,6 @@
+/root/miniconda3/lib/python3.12/site-packages/lightning/pytorch/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.6.0, which is newer than your current Lightning version: v2.5.1
+/root/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1617: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be deprecated in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+{"steps": 128, "T": 1.0, "rollout_acc": 0.138, "eval_acc": 0.143, "diff_pp": -0.5, "z": -0.322, "p": 0.7477}
+<sample>:12: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+{"steps": 128, "T": 0.1, "rollout_acc": 0.336, "eval_acc": 0.362, "diff_pp": -2.6, "z": -1.22, "p": 0.2226}

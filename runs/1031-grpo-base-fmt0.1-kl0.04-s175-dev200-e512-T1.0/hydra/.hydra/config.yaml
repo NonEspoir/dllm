@@ -1,0 +1,165 @@
+mode: gsm8k_eval
+sudoku:
+  output_dir: ${cwd:}/sudoku_eval
+  batch_size: 64
+gsm8k:
+  input_file: null
+  output_dir: /root/autodl-tmp/dllm/runs/1031-grpo-base-fmt0.1-kl0.04-s175-dev200-e512-T1.0
+  timeout: 5.0
+  bootstrap_size: 1000
+seed: 1
+allow_tf32: true
+cudnn_benchmark: true
+compile_backbone: false
+neg_infinity_mode: large-finite
+loader:
+  global_batch_size: 512
+  eval_global_batch_size: ${.global_batch_size}
+  batch_size: ${div_up:${.global_batch_size}, ${eval:${trainer.devices} * ${trainer.num_nodes}}}
+  eval_batch_size: 200
+  num_workers: 4
+  pin_memory: true
+confidence_denoiser:
+  confidence_score: entropy
+  gamma: 0
+training:
+  ema: 0.9999
+  antithetic_sampling: true
+  importance_sampling: false
+  sampling_eps: 0.001
+  change_of_variables: false
+  loss_precision: bf16
+  finetune_path: ''
+  sampling_eps_min: 0.001
+  sampling_eps_max: 1.0
+  resample: false
+eval:
+  checkpoint_path: /root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step175.ckpt
+  strict_loading: true
+  disable_ema: false
+  compute_generative_perplexity: false
+  perplexity_batch_size: 8
+  compute_perplexity_on_sanity: false
+  gen_ppl_eval_model_name_or_path: gpt2-large
+  generate_samples: true
+  generated_samples_path: ${cwd:}/samples.json
+  results_json_path: null
+optim:
+  weight_decay: 0
+  lr: 0.0003
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-08
+trainer:
+  _target_: lightning.Trainer
+  accelerator: cuda
+  num_nodes: 1
+  devices: 1
+  accumulate_grad_batches: ${div_up:${loader.global_batch_size}, ${eval:${trainer.devices}
+    * ${loader.batch_size} * ${trainer.num_nodes}}}
+  gradient_clip_val: 1.0
+  precision: bf16
+  num_sanity_val_steps: 2
+  max_steps: 1000000
+  log_every_n_steps: 100
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  val_check_interval: 5000
+  check_val_every_n_epoch: null
+wandb:
+  project: debug
+  notes: null
+  group: null
+  job_type: null
+  tags:
+  - ${noise.type}
+  - ${data.train}
+  - ${data.valid}
+  - ${algo.name}
+  offline: true
+checkpointing:
+  save_dir: ${cwd:}
+  resume_from_ckpt: true
+  resume_ckpt_path: ${.save_dir}/checkpoints/last.ckpt
+callbacks:
+  checkpoint_every_n_steps:
+    _target_: lightning.pytorch.callbacks.ModelCheckpoint
+    save_top_k: -1
+    save_last: true
+    dirpath: ${checkpointing.save_dir}/checkpoints
+    verbose: true
+    auto_insert_metric_name: false
+    every_n_train_steps: 500
+  checkpoint_monitor:
+    _target_: lightning.pytorch.callbacks.ModelCheckpoint
+    monitor: val/nll
+    mode: min
+    save_top_k: 1
+    save_last: false
+    dirpath: ${checkpointing.save_dir}/checkpoints
+    filename: best
+    auto_insert_metric_name: false
+    verbose: true
+  learning_rate_monitor:
+    _target_: lightning.pytorch.callbacks.LearningRateMonitor
+    logging_interval: step
+data:
+  train: gsm8k_test
+  valid: gsm8k_test
+  tokenizer_name_or_path: HuggingFaceTB/SmolLM-135M
+  wrap: false
+  cache_dir: /root/autodl-tmp/data_cache/gsm8k_dev200
+  data_path: /root/autodl-tmp/data/gsm8k_dev200.json
+  separator: \n
+  streaming: false
+  insert_train_eos: true
+  insert_valid_eos: true
+model:
+  name: small
+  type: dit
+  hidden_size: 768
+  cond_dim: 128
+  length: 512
+  n_blocks: 12
+  n_heads: 12
+  dropout: 0.1
+strategy:
+  _target_: lightning.pytorch.strategies.DDPStrategy
+  find_unused_parameters: false
+noise:
+  type: log-linear
+  eps: 0.001
+  alpha_min: null
+  alpha_max: null
+  adaptive: false
+lr_scheduler:
+  _target_: transformers.get_constant_schedule_with_warmup
+  num_warmup_steps: 2500
+prior:
+  type: none
+  latent_width: 0
+  latent_height: 0
+algo:
+  name: mdlm
+  diffusion_type: absorbing
+  backbone: dit
+  parameterization: subs
+  time_conditioning: false
+  T: 0
+  causal_attention: false
+  loss_type: elbo
+  post_process_mode: log_probs
+  adaLN: true
+sampler:
+  predictor: fast_ancestral
+  steps: 512
+  steps_policy: full
+  noise_removal: ancestral
+  use_float64: true
+  p_nucleus: 1.0
+  temperature: 1.0
+  num_sample_batches: 2
+  num_sample_log: 2
+  logits_mode: selected
+  noise_mode: fast
+  skip_unchanged: true

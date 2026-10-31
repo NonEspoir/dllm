@@ -1,0 +1,89 @@
+{
+ "evals": [
+  {
+   "step": 25,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step25.ckpt",
+   "acc_T1.0": 0.225,
+   "acc_T0.1": 0.435,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 50,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step50.ckpt",
+   "acc_T1.0": 0.23,
+   "acc_T0.1": 0.395,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 75,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step75.ckpt",
+   "acc_T1.0": 0.255,
+   "acc_T0.1": 0.39,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 100,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step100.ckpt",
+   "acc_T1.0": 0.235,
+   "acc_T0.1": 0.375,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 125,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step125.ckpt",
+   "acc_T1.0": 0.235,
+   "acc_T0.1": 0.39,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 150,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step150.ckpt",
+   "acc_T1.0": 0.26,
+   "acc_T0.1": 0.43,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 175,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step175.ckpt",
+   "acc_T1.0": 0.275,
+   "acc_T0.1": 0.45,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 200,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step200.ckpt",
+   "acc_T1.0": 0.275,
+   "acc_T0.1": 0.425,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 225,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step225.ckpt",
+   "acc_T1.0": 0.285,
+   "acc_T0.1": 0.46
+  },
+  {
+   "step": 250,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step250.ckpt",
+   "acc_T1.0": 0.27,
+   "acc_T0.1": 0.435,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 275,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step275.ckpt",
+   "acc_T1.0": 0.29,
+   "acc_T0.1": 0.455,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 300,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.04/step300.ckpt",
+   "acc_T1.0": 0.275,
+   "acc_T0.1": 0.4
+  }
+ ],
+ "stopped_early": null,
+ "train_seconds": 24566.0,
+ "peak_gpu_mem_mib": 22048
+}
