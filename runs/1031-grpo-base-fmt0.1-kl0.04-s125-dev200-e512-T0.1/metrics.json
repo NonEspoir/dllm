@@ -1,0 +1,22 @@
+{
+ "split": "dev200",
+ "sampler": "fast_ancestral",
+ "steps": 512,
+ "temperature": 0.1,
+ "batch": 200,
+ "seed": 1,
+ "git_commit": "3c96b4b0f1155e14f795f8b0c18d5fb38f4289ea",
+ "gpu": "NVIDIA A800 80GB PCIe",
+ "num_total": 200,
+ "num_correct": 78,
+ "accuracy": 0.39,
+ "bootstrap_mean": 0.38966,
+ "ci95": [
+  0.32,
+  0.46
+ ],
+ "wall_seconds": 76,
+ "sample_seconds": 63,
+ "peak_gpu_mem_mib": 22945,
+ "per_question_correct": "10001110011000100000101010100010100001100100001110000101001101001111011000010101100110000000011100111001000001110011000100001000011010110101100100111000000000100010011110010110000000100010000110110010"
+}
