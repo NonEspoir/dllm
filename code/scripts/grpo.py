@@ -106,6 +106,13 @@ def main():
                  help='brake relative to the start: stop when the last-window mean '
                       'action log-prob < ratio x the mean of the first window')
   p.add_argument('--stop_window', type=int, default=10)
+  p.add_argument('--kl', type=float, default=0.0,
+                 help='KL penalty to the init checkpoint (R41): + beta * mean over '
+                      'sampled rounds of (log p_theta - log p_ref) on the actions. '
+                      'k3 estimator (Schulman): exp(log p_ref - log p_theta) - 1 - '
+                      '(log p_ref - log p_theta), unbiased, non-negative. The '
+                      'reference is the same tracer with parameters restored from '
+                      'the init checkpoint.')
   p.add_argument('--pool_size', type=int, default=0,
                  help='sanity check: train on the first N questions only (cycling)')
   args = p.parse_args()
@@ -123,6 +130,19 @@ def main():
   model = sft.load_model(config, tok, args.init_ckpt).to('cuda')
   model.backbone.eval()  # policy = eval-mode network (no dropout)
   params = [q for q in model._get_parameters() if q.requires_grad]
+  if args.kl:
+    # Reference = the policy as loaded, i.e. the init checkpoint's EMA weights
+    # (what every evaluation of the start model uses), frozen. Deep copy after
+    # sft.load_model so the reference is never updated by the optimizer.
+    import copy
+    ref_model = copy.deepcopy(model)
+    ref_model.eval()
+    for q in ref_model.parameters():
+      q.requires_grad_(False)
+    assert all(x.data_ptr() != y.data_ptr()
+               for x, y in zip(ref_model.parameters(), model.parameters()))
+  else:
+    ref_model = None
   opt = torch.optim.AdamW(params, lr=args.lr, betas=(0.9, 0.999), eps=1e-8,
                           weight_decay=0.0)
   pool, n_excl = question_pool(args.seed)
@@ -180,8 +200,8 @@ def main():
            'kept_rows': int(len(idx)), 'rollout_s': round(t_roll, 1),
            'resp_chars': sum(map(len, ro.responses)) / len(ro.responses)}
     if ro.categories is not None:
-      for k in ('wrong', 'no_number', 'runtime', 'syntax', 'no_fn'):
-        rec[f'cat_{k}'] = ro.categories.count(k) / len(ro.categories)
+      for cat in ('wrong', 'no_number', 'runtime', 'syntax', 'no_fn'):
+        rec[f'cat_{cat}'] = ro.categories.count(cat) / len(ro.categories)
 
     # 4-5. loss and update
     t0 = time.time()
@@ -203,7 +223,7 @@ def main():
       gnorms, clip_fracs, ratio_means = [], [], []
       for u in range(args.updates):
         opt.zero_grad(set_to_none=True)
-        tot_loss, lp_sum, lp_n, n_clip, r_sum = 0.0, 0.0, 0, 0.0, 0.0
+        tot_loss, lp_sum, lp_n, n_clip, r_sum, kl_sum = 0.0, 0.0, 0, 0.0, 0.0, 0.0
         for ci, c in enumerate(chunks):
           lp, act = logprob.logp_at_rounds(model, tokens[c], rs[c], rounds[c],
                                            args.temperature,
@@ -212,8 +232,20 @@ def main():
           ref = lp.detach() if old is None else old[ci]
           loss, st = grpo.grpo_loss(lp, ref, act, w[c], a[c], n_act,
                                     args.eps_low, args.eps_high)
-          loss.backward()
           k = int(act.sum())
+          if ref_model is not None:
+            # same canvas/rounds: the trace only differs in the weights
+            with torch.no_grad():
+              lp_ref, _ = logprob.logp_at_rounds(ref_model, tokens[c], rs[c], rounds[c],
+                                                 args.temperature,
+                                                 count_pad=not args.no_pad,
+                                                 chunk=args.chunk * args.rounds)
+            d = lp_ref - lp
+            kl_tok = (torch.exp(d) - 1 - d)
+            kl = (w[c][:, :, None] * act * kl_tok).sum() / n_act.sum().clamp(min=1)
+            loss = loss + args.kl * kl
+            kl_sum += float(kl.detach()) * k
+          loss.backward()
           tot_loss += float(loss.detach())
           lp_sum += float(lp.detach()[act].sum())
           lp_n += k
@@ -225,8 +257,10 @@ def main():
         ratio_means.append(r_sum / max(lp_n, 1))
         if u == 0:
           first_loss, first_logp = tot_loss, lp_sum / max(lp_n, 1)
+          first_kl = kl_sum / max(lp_n, 1)
       rec.update({'loss': first_loss, 'grad_norm': sum(gnorms) / len(gnorms),
                   'action_logp': first_logp,
+                  **({'kl': first_kl} if ref_model is not None else {}),
                   'clip_frac_last': clip_fracs[-1], 'ratio_mean_last': ratio_means[-1]})
     else:
       rec.update({'loss': 0.0, 'grad_norm': 0.0, 'action_logp': None, 'skipped': True})
