@@ -1,0 +1,15 @@
+git_commit: 79052de94f88f92bf5df14bbe6530946b110b4f1
+git_dirty: 5
+split: dev200
+sampler: fast_ancestral
+steps: 512
+temperature: 1.0
+batch: 200
+seed: 1
+ckpt: /root/autodl-tmp/rl_ckpt/1031-grpo-sft-e1-fmt0.1/step50.ckpt
+extra: sampler.skip_unchanged=true
+gpu: NVIDIA A800 80GB PCIe
+start: 2026-10-31T21:54:06+08:00
+end: 2026-10-31T21:55:21+08:00
+wall_seconds: 75
+peak_gpu_mem_mib: 18753

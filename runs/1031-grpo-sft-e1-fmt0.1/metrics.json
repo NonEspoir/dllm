@@ -1,0 +1,51 @@
+{
+ "evals": [
+  {
+   "step": 25,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-sft-e1-fmt0.1/step25.ckpt",
+   "acc_T1.0": 0.21,
+   "acc_T0.1": 0.39,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 50,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-sft-e1-fmt0.1/step50.ckpt",
+   "acc_T1.0": 0.26,
+   "acc_T0.1": 0.44,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 75,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-sft-e1-fmt0.1/step75.ckpt",
+   "acc_T1.0": 0.255,
+   "acc_T0.1": 0.445,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 100,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-sft-e1-fmt0.1/step100.ckpt",
+   "acc_T1.0": 0.265,
+   "acc_T0.1": 0.435,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 125,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-sft-e1-fmt0.1/step125.ckpt",
+   "acc_T1.0": 0.27,
+   "acc_T0.1": 0.44
+  },
+  {
+   "step": 138,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-sft-e1-fmt0.1/step138.ckpt",
+   "acc_T1.0": 0.24,
+   "acc_T0.1": 0.445
+  }
+ ],
+ "stopped_early": {
+  "step": 138,
+  "mean_action_logp": -0.24064205389787463,
+  "threshold": -0.23942098598881092
+ },
+ "train_seconds": 10016.2,
+ "peak_gpu_mem_mib": 20760
+}
