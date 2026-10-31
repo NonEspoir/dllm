@@ -110,9 +110,12 @@ def main():
                  help='KL penalty to the init checkpoint (R41): + beta * mean over '
                       'sampled rounds of (log p_theta - log p_ref) on the actions. '
                       'k3 estimator (Schulman): exp(log p_ref - log p_theta) - 1 - '
-                      '(log p_ref - log p_theta), unbiased, non-negative. The '
-                      'reference is the same tracer with parameters restored from '
-                      'the init checkpoint.')
+                      '(log p_ref - log p_theta), non-negative; its value is an '
+                      'unbiased estimate of KL(pi || ref), but used directly as a loss '
+                      'its expected gradient is that of KL(ref || pi) (as in DeepSeek '
+                      'GRPO). Not clipped (R43: a gradient spike at step 14 of the '
+                      'first KL run). The reference is a frozen deep copy of the '
+                      'policy as loaded (the init checkpoint).')
   p.add_argument('--pool_size', type=int, default=0,
                  help='sanity check: train on the first N questions only (cycling)')
   args = p.parse_args()
@@ -244,7 +247,7 @@ def main():
             kl_tok = (torch.exp(d) - 1 - d)
             kl = (w[c][:, :, None] * act * kl_tok).sum() / n_act.sum().clamp(min=1)
             loss = loss + args.kl * kl
-            kl_sum += float(kl.detach()) * k
+            kl_sum += float(kl.detach())  # chunk share of the batch KL (already / n_act)
           loss.backward()
           tot_loss += float(loss.detach())
           lp_sum += float(lp.detach()[act].sum())
@@ -257,8 +260,9 @@ def main():
         ratio_means.append(r_sum / max(lp_n, 1))
         if u == 0:
           first_loss, first_logp = tot_loss, lp_sum / max(lp_n, 1)
-          first_kl = kl_sum / max(lp_n, 1)
+          first_kl = kl_sum  # R43: was kl_sum / lp_n weighted by k, ~1/n_chunks too small
       rec.update({'loss': first_loss, 'grad_norm': sum(gnorms) / len(gnorms),
+                  'grad_norm_max': max(gnorms),
                   'action_logp': first_logp,
                   **({'kl': first_kl} if ref_model is not None else {}),
                   'clip_frac_last': clip_fracs[-1], 'ratio_mean_last': ratio_means[-1]})

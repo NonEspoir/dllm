@@ -21,7 +21,7 @@ def category(sample, answer, timeout_s=5.0):
   code = sb._extract_code(sample)
   try:
     compile(code, '<sample>', 'exec')
-  except SyntaxError:
+  except (SyntaxError, ValueError):  # ValueError: e.g. null bytes (as rl/reward.py)
     return 'syntax'
   try:
     with sb._time_limit(timeout_s):

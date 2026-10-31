@@ -78,3 +78,5 @@ EVAL {"step": 300, "ckpt": "/root/autodl-tmp/rl_ckpt/1031-grpo-base-fmt0.1-kl0.0
 | base | — | 0.1 | 38.6 | — | 38.5 | — |
 | 1031-grpo-base-fmt0.1-kl0.04 | 225 | 1.0 | 29.7 | 1.05e-14 (+176/-59) | 30.0 | 5.09e-14 (+148/-45) |
 | 1031-grpo-base-fmt0.1-kl0.04 | 225 | 0.1 | 46.8 | 6.78e-08 (+156/-74) | 47.0 | 5.9e-07 (+126/-58) |
+=== 2026-10-31T20:11:56+08:00 pipeline done
+=== no shutdown (SHUTDOWN=1, NO_SHUTDOWN present)
