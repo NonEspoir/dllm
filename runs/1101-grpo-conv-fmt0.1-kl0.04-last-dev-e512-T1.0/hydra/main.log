@@ -1,0 +1,7 @@
+[2026-11-02 05:50:31,569][__main__][INFO] - Starting GSM8K eval.
+[2026-11-02 05:50:34,017][dataloader][INFO] - Loading GSM8K test from cache: /root/autodl-tmp/data_cache/gsm8k_dev/gsm8k_test_HuggingFaceTB__SmolLM-135M_with_text
+[2026-11-02 05:55:48,149][__main__][INFO] - Rank 0: average NFE per batch: 512.0
+[2026-11-02 05:55:48,156][__main__][INFO] - Rank 0: saved 1000 records to /root/autodl-tmp/dllm/runs/1101-grpo-conv-fmt0.1-kl0.04-last-dev-e512-T1.0/rank_0000.json
+[2026-11-02 05:55:48,216][__main__][INFO] - Total records evaluated: 1000
+[2026-11-02 05:55:53,374][__main__][INFO] - GSM8K accuracy: 30.76% [28.00%, 33.70%] (95% CI) (308/1000, bootstrap N=1000)
+[2026-11-02 05:55:53,382][__main__][INFO] - Results saved to /root/autodl-tmp/dllm/runs/1101-grpo-conv-fmt0.1-kl0.04-last-dev-e512-T1.0/results.json

@@ -1,0 +1,118 @@
+{
+ "evals": [
+  {
+   "step": 25,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step25.ckpt",
+   "acc_T1.0": 0.205,
+   "acc_T0.1": 0.4,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 50,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step50.ckpt",
+   "acc_T1.0": 0.255,
+   "acc_T0.1": 0.4,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 75,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step75.ckpt",
+   "acc_T1.0": 0.225,
+   "acc_T0.1": 0.41,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 100,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step100.ckpt",
+   "acc_T1.0": 0.225,
+   "acc_T0.1": 0.415,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 125,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step125.ckpt",
+   "acc_T1.0": 0.235,
+   "acc_T0.1": 0.47,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 150,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step150.ckpt",
+   "acc_T1.0": 0.28,
+   "acc_T0.1": 0.445,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 175,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step175.ckpt",
+   "acc_T1.0": 0.26,
+   "acc_T0.1": 0.46,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 200,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step200.ckpt",
+   "acc_T1.0": 0.275,
+   "acc_T0.1": 0.455,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 225,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step225.ckpt",
+   "acc_T1.0": 0.29,
+   "acc_T0.1": 0.445,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 250,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step250.ckpt",
+   "acc_T1.0": 0.305,
+   "acc_T0.1": 0.44,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 275,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step275.ckpt",
+   "acc_T1.0": 0.32,
+   "acc_T0.1": 0.455,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 300,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step300.ckpt",
+   "acc_T1.0": 0.325,
+   "acc_T0.1": 0.46,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 325,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step325.ckpt",
+   "acc_T1.0": 0.32,
+   "acc_T0.1": 0.46,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 350,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step350.ckpt",
+   "acc_T1.0": 0.325,
+   "acc_T0.1": 0.445,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 375,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step375.ckpt",
+   "acc_T1.0": 0.33,
+   "acc_T0.1": 0.435,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 400,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step400.ckpt",
+   "acc_T1.0": 0.325,
+   "acc_T0.1": 0.45
+  }
+ ],
+ "stopped_early": null,
+ "train_seconds": 32377.8,
+ "peak_gpu_mem_mib": 22054
+}
