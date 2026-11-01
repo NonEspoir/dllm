@@ -95,9 +95,10 @@ def main():
   p.add_argument('--seed', type=int, default=1)
   p.add_argument('--updates', type=int, default=1,
                  help='updates per rollout batch (D32); 1 = on-policy, clip inactive')
-  p.add_argument('--keep_ckpts', choices=['all', 'best_last'], default='all',
+  p.add_argument('--keep_ckpts', choices=['all', 'best_last', 'last'], default='all',
                  help='best_last: keep only the best-so-far (mean dev acc over '
-                      'both temperatures, ties -> earlier) and the latest checkpoint')
+                      'both temperatures, ties -> earlier) and the latest checkpoint; '
+                      'last: keep only the latest (R44, convergence runs)')
   p.add_argument('--stop_logp', type=float, default=None,
                  help='brake (R39): stop when the mean action log-prob of the last '
                       '--stop_window steps falls below this (D5 binary arm diverged '
@@ -116,6 +117,22 @@ def main():
                       'GRPO). Not clipped (R43: a gradient spike at step 14 of the '
                       'first KL run). The reference is a frozen deep copy of the '
                       'policy as loaded (the init checkpoint).')
+  p.add_argument('--kl_clip', type=float, default=20.0,
+                 help='R44: bound |log p_ref - log p_theta| before the k3 estimator '
+                      '(verl low_var_kl uses 20). Without it a token the policy has '
+                      'almost dropped makes exp(d) explode: step 14 of the first KL '
+                      'run had a gradient norm of about 2500 vs 0.016 normally '
+                      '(docs/09 §2.1). 0 disables.')
+  p.add_argument('--kl_max', type=float, default=10.0,
+                 help='R44: upper bound on the per-token k3 contribution (verl uses 10)')
+  p.add_argument('--spike_ratio', type=float, default=0.0,
+                 help='R44: skip the optimizer step when the gradient norm exceeds this '
+                      'multiple of the median of the last 50 norms (0 = off). The params '
+                      'are left untouched; the batch is discarded.')
+  p.add_argument('--lr_schedule', choices=['constant', 'cosine'], default='constant',
+                 help='R44: cosine decays from the warmup plateau to lr_min_frac * lr '
+                      'at the last step')
+  p.add_argument('--lr_min_frac', type=float, default=0.1)
   p.add_argument('--pool_size', type=int, default=0,
                  help='sanity check: train on the first N questions only (cycling)')
   args = p.parse_args()
@@ -167,13 +184,18 @@ def main():
     json.dump(info, f, indent=1)
   log = open(os.path.join(run_dir, 'train_log.jsonl'), 'w')
   evals = []
-  recent_logp, start_logp = [], []
+  recent_logp, start_logp, recent_gnorm, spikes = [], [], [], []
   stopped = None
   gen = torch.Generator().manual_seed(args.seed)
   cursor, t_start = 0, time.time()
 
   for step in range(1, args.steps + 1):
     lr = args.lr * min(1.0, step / max(1, args.warmup))
+    if args.lr_schedule == 'cosine':
+      # R44: warmup, then cosine from the full rate down to lr_min_frac by the last
+      # step, so the run ends with small steps instead of drifting at a constant rate
+      prog = min(1.0, max(0.0, (step - args.warmup) / max(1, args.steps - args.warmup)))
+      lr *= args.lr_min_frac + (1 - args.lr_min_frac) * 0.5 * (1 + math.cos(math.pi * prog))
     for q in opt.param_groups:
       q['lr'] = lr
     if cursor + args.questions > len(pool):
@@ -224,6 +246,7 @@ def main():
                                         chunk=args.chunk * args.rounds)[0]
                  for c in chunks]
       gnorms, clip_fracs, ratio_means = [], [], []
+      n_spike = 0
       for u in range(args.updates):
         opt.zero_grad(set_to_none=True)
         tot_loss, lp_sum, lp_n, n_clip, r_sum, kl_sum = 0.0, 0.0, 0, 0.0, 0.0, 0.0
@@ -244,7 +267,11 @@ def main():
                                                  count_pad=not args.no_pad,
                                                  chunk=args.chunk * args.rounds)
             d = lp_ref - lp
-            kl_tok = (torch.exp(d) - 1 - d)
+            if args.kl_clip > 0:  # R44: see --kl_clip
+              d = d.clamp(-args.kl_clip, args.kl_clip)
+              kl_tok = (torch.exp(d) - 1 - d).clamp(max=args.kl_max)
+            else:
+              kl_tok = torch.exp(d) - 1 - d
             kl = (w[c][:, :, None] * act * kl_tok).sum() / n_act.sum().clamp(min=1)
             loss = loss + args.kl * kl
             kl_sum += float(kl.detach())  # chunk share of the batch KL (already / n_act)
@@ -254,15 +281,25 @@ def main():
           lp_n += k
           n_clip += st['clip_frac'] * k
           r_sum += st['ratio_mean'] * k
-        gnorms.append(float(torch.nn.utils.clip_grad_norm_(params, args.grad_clip)))
-        opt.step()
+        gnorm = float(torch.nn.utils.clip_grad_norm_(params, args.grad_clip))
+        gnorms.append(gnorm)
+        ref_median = (sorted(recent_gnorm)[len(recent_gnorm) // 2]
+                      if recent_gnorm else 0.0)
+        if (args.spike_ratio > 0 and len(recent_gnorm) >= 10
+            and gnorm > args.spike_ratio * ref_median):
+          n_spike += 1  # R44: discard this update, params untouched
+          spikes.append({'step': step, 'update': u, 'grad_norm': gnorm,
+                         'median': ref_median})
+        else:
+          opt.step()
+        recent_gnorm = (recent_gnorm + [gnorm])[-50:]
         clip_fracs.append(n_clip / max(lp_n, 1))
         ratio_means.append(r_sum / max(lp_n, 1))
         if u == 0:
           first_loss, first_logp = tot_loss, lp_sum / max(lp_n, 1)
           first_kl = kl_sum  # R43: was kl_sum / lp_n weighted by k, ~1/n_chunks too small
       rec.update({'loss': first_loss, 'grad_norm': sum(gnorms) / len(gnorms),
-                  'grad_norm_max': max(gnorms),
+                  'grad_norm_max': max(gnorms), 'skipped_updates': n_spike,
                   'action_logp': first_logp,
                   **({'kl': first_kl} if ref_model is not None else {}),
                   'clip_frac_last': clip_fracs[-1], 'ratio_mean_last': ratio_means[-1]})
@@ -307,6 +344,11 @@ def main():
         e[f'acc_T{T}'] = run_eval(path, name, T, args.eval_steps, args.eval_split)
       evals.append(e)
       print('EVAL', json.dumps(e), flush=True)
+      if args.keep_ckpts == 'last':
+        for x in evals[:-1]:
+          if os.path.exists(x['ckpt']):
+            os.remove(x['ckpt'])
+            x['ckpt_deleted'] = True
       if args.keep_ckpts == 'best_last':
         def score(x):
           v = [x.get(f'acc_T{T}') for T in (1.0, 0.1)]
