@@ -1,0 +1,15 @@
+git_commit: e9f3c65e1c4e0c9e5289c66dafbb6646d69aea2b
+git_dirty: 17
+split: dev
+sampler: fast_ancestral
+steps: 512
+temperature: 0.1
+batch: 200
+seed: 1
+ckpt: /root/autodl-tmp/rl_ckpt/1103-grpo-elbo-fmt0.1/step150.ckpt
+extra: sampler.skip_unchanged=true
+gpu: NVIDIA A800 80GB PCIe
+start: 2026-11-03T05:56:52+08:00
+end: 2026-11-03T06:02:21+08:00
+wall_seconds: 329
+peak_gpu_mem_mib: 11109
