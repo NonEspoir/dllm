@@ -89,6 +89,8 @@ def gpu_checks(n_questions, steps):
         before[state.step_idx] = state.xt.clone()
         state = sampler.step(model, state)
     tokens, rs, slp = state.xt, state.reveal_step, state.token_logp
+    if T == 1.0:
+      ok &= check_elbo_model(model, tokens, rs, tok)  # D12 control arm
 
     # 1. canvas reconstruction
     n_bad = 0
@@ -155,6 +157,34 @@ def gpu_checks(n_questions, steps):
   print('   first response:', ro.responses[0][:200].replace('\n', ' | '))
   ok &= set(ro.rewards.tolist()) <= {0.0, 1.0}
   return ok
+
+
+def check_elbo_model(model, tokens, reveal_step, tok):
+  """Numbers for one batch; called from gpu_checks so the model is loaded once."""
+  import fast_sampler
+  temperature = 1.0
+  logp, act = logprob.logp_elbo(model, tokens, reveal_step, temperature)
+  assert logp.shape == (tokens.shape[0], 1, tokens.shape[1]), logp.shape
+  expect = (reveal_step >= 0)
+  assert bool((act[:, 0] == expect).all()), 'act must mark exactly the completion'
+  assert bool((logp[:, 0][~expect] == 0).all()), 'non-actions must be 0'
+  vals = logp[:, 0][expect]
+  assert bool(torch.isfinite(vals).all()) and float(vals.max()) <= 1e-6, 'log-probs > 0'
+  # direct recompute: all completion positions masked, one forward, compare
+  xt = torch.where(reveal_step >= 0, torch.full_like(tokens, model.mask_index), tokens)
+  sigma = model._process_sigma(torch.zeros(len(tokens), 1, device=tokens.device))
+  with torch.no_grad():
+    h, _ = fast_sampler._backbone_hidden(model.backbone, xt, sigma)
+    logits = fast_sampler._output_logits(model.backbone, h).float() / temperature
+    rows = torch.full((len(tokens), 1), model.mask_index, dtype=torch.long,
+                      device=tokens.device)
+    lp = model._process_model_output(model_output=logits[:, None, :], xt=rows,
+                                     sigma=None)[:, 0]
+    ref = lp.gather(-1, tokens[:, :, None])[:, :, 0].float()
+  diff = (ref[expect] - logp[:, 0][expect]).abs().max()
+  print(f'[gpu] ELBO: {int(expect.sum())} actions, mean {float(vals.mean()):.3f}, '
+        f'max |recompute - logp_elbo| {float(diff):.2e}')
+  return float(diff) < 1e-4
 
 
 def main():
