@@ -122,3 +122,5 @@ k=7: majority 63.6%   pass@7 77.6%
 k=8: majority 64.6%   pass@8 78.8%
 questions with no usable answer in any sample: 0 (0.0%)
 ```
+=== 2026-11-03T03:49:51+08:00 pipeline done
+=== no shutdown (SHUTDOWN=0, NO_SHUTDOWN absent)

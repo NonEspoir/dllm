@@ -124,3 +124,78 @@ k=7: majority 63.6%   pass@7 77.6%
 k=8: majority 64.6%   pass@8 78.8%
 questions with no usable answer in any sample: 0 (0.0%)
 ```
+=== 2026-11-03T03:49:51+08:00 pipeline done
+=== no shutdown (SHUTDOWN=0, NO_SHUTDOWN absent)
+=== 2026-11-03T03:49:51+08:00 D6 end exit=0
+=== 2026-11-03T03:49:51+08:00 start 1103-grpo-elbo-fmt0.1
+=== 2026-11-03T05:51:29+08:00 end 1103-grpo-elbo-fmt0.1 exit=0
+EVAL {"step": 25, "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-fmt0.1/step25.ckpt", "acc_T1.0": 0.395, "acc_T0.1": 0.5}
+EVAL {"step": 50, "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-fmt0.1/step50.ckpt", "acc_T1.0": 0.455, "acc_T0.1": 0.48}
+EVAL {"step": 75, "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-fmt0.1/step75.ckpt", "acc_T1.0": 0.435, "acc_T0.1": 0.51}
+EVAL {"step": 100, "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-fmt0.1/step100.ckpt", "acc_T1.0": 0.47, "acc_T0.1": 0.495}
+EVAL {"step": 125, "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-fmt0.1/step125.ckpt", "acc_T1.0": 0.495, "acc_T0.1": 0.525}
+EVAL {"step": 150, "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-fmt0.1/step150.ckpt", "acc_T1.0": 0.5, "acc_T0.1": 0.53}
+=== 1103-grpo-elbo-fmt0.1: selected step 150 (/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-fmt0.1/step150.ckpt)
+=== 2026-11-03T05:51:29+08:00 start 1103-grpo-elbo-fmt0.1-best-s150-dev-e512-T1.0
+=== 2026-11-03T05:56:52+08:00 end 1103-grpo-elbo-fmt0.1-best-s150-dev-e512-T1.0 exit=0
+=== 2026-11-03T05:56:52+08:00 start 1103-grpo-elbo-fmt0.1-best-s150-dev-e512-T0.1
+=== 2026-11-03T06:02:27+08:00 end 1103-grpo-elbo-fmt0.1-best-s150-dev-e512-T0.1 exit=0
+=== 2026-11-03T06:02:27+08:00 demo
+=== demo exit=0
+/root/miniconda3/lib/python3.12/site-packages/lightning/pytorch/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.6.0, which is newer than your current Lightning version: v2.5.1
+/root/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1617: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be deprecated in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+/root/miniconda3/lib/python3.12/site-packages/lightning/pytorch/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.6.0, which is newer than your current Lightning version: v2.5.1
+/root/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1617: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be deprecated in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+==============================================================================
+[dev #3] Emma's bank account has $100 in it. Each day of the week, she spends $8. At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her. She leaves the rest in the account. How many dollars remain in the account?
+gold: <8*5=40>>40
+She has $4 left in the account because 44 - 40 = <<44-40=4>>4
+#### 4
+------------------------------------------------------------------------------
+base: wrong
+def simple_math_problem() -> int:
+    '''
+    Emma's bank account has $100 in it.
+    Each day of the week, she spends $8.
+    At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her.
+    She leaves the rest in the account.
+    How many dollars remain in the account?
+    '''
+    account_balance = 100
+    daily_spending = 8
+    weekly_spending = 7 * daily_spending
+    remaining_balance = account_balance - weekly_spending
+    bills_given = remaining_balance // 5
+    result = remaining_balance
+    return result
+------------------------------------------------------------------------------
+rl: wrong
+def simple_math_problem() -> int:
+    '''
+    Emma's bank account has $100 in it.
+    Each day of the week, she spends $8.
+    At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her.
+    She leaves the rest in the account.
+    How many dollars remain in the account?
+    '''
+    starting_balance = 100
+    weekly_spending = 8*7*7
+# 1103: D6 结果、ELBO 对照、demo
+
+## ELBO 对照（D12）
+
+| | 训练时间/步（估） | 训练正确率 | T=1 | T=0.1 |
+|---|---|---|---|---|
+| ELBO | 8.9 s | 0.458（最后 25 步） | (见下) | (见下) |
+| 轨迹法（D5 格式分臂） | 32.1720 s | 0.282（最后 25 步） | 31.6 | 46.4 |
+
+| 臂 | T | dev1000 | p vs base | last 800 |
+|---|---|---|---|---|
+| ELBO（step 150） | 1.0 | 48.1 | 4.38e-61 (+340/-39) | 47.6 |
+| ELBO（step 150） | 0.1 | 51.3 | 2.01e-13 (+215/-88) | 50.9 |
+
+## 其余结果
+
+D6 见 1103-D6-test-summary.md；demo 卡片见 1103-demo.txt 与 1103-demo-cards.json。
