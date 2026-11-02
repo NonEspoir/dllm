@@ -1,0 +1,126 @@
+=== 2026-11-03T00:47:16+08:00 pipeline d7 start
+=== 2026-11-03T00:47:16+08:00 D6 start
+=== 2026-11-03T00:47:16+08:00 pipeline d6 start
+=== 2026-11-03T00:47:16+08:00 start 1103-test-rl-s512-T1.0
+=== 2026-11-03T00:54:28+08:00 end 1103-test-rl-s512-T1.0 exit=0
+=== 2026-11-03T00:54:28+08:00 start 1103-test-rl-s512-T0.1
+=== 2026-11-03T01:01:32+08:00 end 1103-test-rl-s512-T0.1 exit=0
+=== 2026-11-03T01:01:32+08:00 start 1103-test-rl-s1024-T1.0
+=== 2026-11-03T01:10:15+08:00 end 1103-test-rl-s1024-T1.0 exit=0
+=== 2026-11-03T01:10:15+08:00 start 1103-test-base-s512-T1.0
+=== 2026-11-03T01:17:20+08:00 end 1103-test-base-s512-T1.0 exit=0
+=== 2026-11-03T01:17:20+08:00 start 1103-test-base-s512-T0.1
+=== 2026-11-03T01:24:25+08:00 end 1103-test-base-s512-T0.1 exit=0
+=== 2026-11-03T01:24:25+08:00 start 1103-test-base-s1024-T1.0
+=== 2026-11-03T01:33:21+08:00 end 1103-test-base-s1024-T1.0 exit=0
+=== 2026-11-03T01:33:21+08:00 start 1103-test-sft-s512-T1.0
+=== 2026-11-03T01:40:35+08:00 end 1103-test-sft-s512-T1.0 exit=0
+=== 2026-11-03T01:40:35+08:00 start 1103-test-sft-s512-T0.1
+=== 2026-11-03T01:47:39+08:00 end 1103-test-sft-s512-T0.1 exit=0
+=== 2026-11-03T01:47:39+08:00 start 1103-test-sft-s1024-T1.0
+=== 2026-11-03T01:56:32+08:00 end 1103-test-sft-s1024-T1.0 exit=0
+=== 2026-11-03T01:56:32+08:00 start 1103-dev-rl-s512-T1.0
+=== 2026-11-03T02:02:06+08:00 end 1103-dev-rl-s512-T1.0 exit=0
+=== 2026-11-03T02:02:06+08:00 start 1103-dev-rl-s512-T0.1
+=== 2026-11-03T02:07:40+08:00 end 1103-dev-rl-s512-T0.1 exit=0
+=== 2026-11-03T02:07:40+08:00 start 1103-dev-rl-s128-T1.0
+=== 2026-11-03T02:10:13+08:00 end 1103-dev-rl-s128-T1.0 exit=0
+=== 2026-11-03T02:10:13+08:00 start 1103-dev-rl-s256-T1.0
+=== 2026-11-03T02:14:15+08:00 end 1103-dev-rl-s256-T1.0 exit=0
+=== 2026-11-03T02:14:15+08:00 start 1103-dev-rl-s1024-T1.0
+=== 2026-11-03T02:20:54+08:00 end 1103-dev-rl-s1024-T1.0 exit=0
+=== 2026-11-03T02:20:54+08:00 start 1103-dev-rl-mv-T1.0-seed1
+=== 2026-11-03T02:26:28+08:00 end 1103-dev-rl-mv-T1.0-seed1 exit=0
+=== 2026-11-03T02:26:28+08:00 start 1103-dev-rl-mv-T1.0-seed2
+=== 2026-11-03T02:31:52+08:00 end 1103-dev-rl-mv-T1.0-seed2 exit=0
+=== 2026-11-03T02:31:52+08:00 start 1103-dev-rl-mv-T1.0-seed3
+=== 2026-11-03T02:37:36+08:00 end 1103-dev-rl-mv-T1.0-seed3 exit=0
+=== 2026-11-03T02:37:36+08:00 start 1103-dev-rl-mv-T1.0-seed4
+=== 2026-11-03T02:43:00+08:00 end 1103-dev-rl-mv-T1.0-seed4 exit=0
+=== 2026-11-03T02:43:00+08:00 start 1103-dev-rl-mv-T1.0-seed5
+=== 2026-11-03T02:48:34+08:00 end 1103-dev-rl-mv-T1.0-seed5 exit=0
+=== 2026-11-03T02:48:34+08:00 start 1103-dev-rl-mv-T1.0-seed6
+=== 2026-11-03T02:53:57+08:00 end 1103-dev-rl-mv-T1.0-seed6 exit=0
+=== 2026-11-03T02:53:57+08:00 start 1103-dev-rl-mv-T1.0-seed7
+=== 2026-11-03T02:59:20+08:00 end 1103-dev-rl-mv-T1.0-seed7 exit=0
+=== 2026-11-03T02:59:20+08:00 start 1103-dev-rl-mv-T1.0-seed8
+=== 2026-11-03T03:04:44+08:00 end 1103-dev-rl-mv-T1.0-seed8 exit=0
+=== 2026-11-03T03:04:44+08:00 start 1103-dev-rl-mv-T0.1-seed1
+=== 2026-11-03T03:10:18+08:00 end 1103-dev-rl-mv-T0.1-seed1 exit=0
+=== 2026-11-03T03:10:18+08:00 start 1103-dev-rl-mv-T0.1-seed2
+=== 2026-11-03T03:15:51+08:00 end 1103-dev-rl-mv-T0.1-seed2 exit=0
+=== 2026-11-03T03:15:51+08:00 start 1103-dev-rl-mv-T0.1-seed3
+=== 2026-11-03T03:21:14+08:00 end 1103-dev-rl-mv-T0.1-seed3 exit=0
+=== 2026-11-03T03:21:14+08:00 start 1103-dev-rl-mv-T0.1-seed4
+=== 2026-11-03T03:26:38+08:00 end 1103-dev-rl-mv-T0.1-seed4 exit=0
+=== 2026-11-03T03:26:38+08:00 start 1103-dev-rl-mv-T0.1-seed5
+=== 2026-11-03T03:32:12+08:00 end 1103-dev-rl-mv-T0.1-seed5 exit=0
+=== 2026-11-03T03:32:12+08:00 start 1103-dev-rl-mv-T0.1-seed6
+=== 2026-11-03T03:37:56+08:00 end 1103-dev-rl-mv-T0.1-seed6 exit=0
+=== 2026-11-03T03:37:56+08:00 start 1103-dev-rl-mv-T0.1-seed7
+=== 2026-11-03T03:43:19+08:00 end 1103-dev-rl-mv-T0.1-seed7 exit=0
+=== 2026-11-03T03:43:19+08:00 start 1103-dev-rl-mv-T0.1-seed8
+=== 2026-11-03T03:48:53+08:00 end 1103-dev-rl-mv-T0.1-seed8 exit=0
+# D6 final evaluation (1103)
+
+## test set, three models x three settings
+
+| model | steps | T | accuracy | 95% CI | n | time |
+|---|---|---|---|---|---|---|
+| rl | 512 | 1.0 | 27.4 | [25.1, 29.7] | 1319 | 427 s |
+| rl | 512 | 0.1 | 39.5 | [36.9, 42.1] | 1319 | 424 s |
+| rl | 1024 | 1.0 | 29.4 | [27.0, 31.7] | 1319 | 523 s |
+| base | 512 | 1.0 | 15.2 | [13.3, 17.2] | 1319 | 425 s |
+| base | 512 | 0.1 | 32.4 | [29.9, 34.9] | 1319 | 425 s |
+| base | 1024 | 1.0 | 16.0 | [14.1, 18.0] | 1319 | 531 s |
+| sft | 512 | 1.0 | 15.2 | [13.2, 17.1] | 1319 | 429 s |
+| sft | 512 | 0.1 | 33.5 | [31.0, 36.2] | 1319 | 423 s |
+| sft | 1024 | 1.0 | 15.3 | [13.4, 17.3] | 1319 | 528 s |
+
+## final model on dev: step robustness (T=1)
+
+| steps | accuracy |
+|---|---|
+| 128 | 27.3 |
+| 256 | 31.9 |
+| 512 | 30.8 |
+| 1024 | 33.0 |
+
+## majority vote / pass@k on dev (8 different seeds)
+
+### T=1.0
+```
+<sample>:13: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:10: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:9: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:7: SyntaxWarning: 'int' object is not subscriptable; perhaps you missed a comma?
+<sample>:11: SyntaxWarning: 'float' object is not callable; perhaps you missed a comma?
+<sample>:10: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:14: SyntaxWarning: invalid decimal literal
+<sample>:6: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:13: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+8 samples x 1000 questions
+k=1: majority 30.8%   pass@1 30.8%
+k=2: majority 38.7%   pass@2 45.7%
+k=3: majority 44.2%   pass@3 53.7%
+k=4: majority 48.0%   pass@4 58.9%
+k=5: majority 50.9%   pass@5 62.7%
+k=6: majority 53.5%   pass@6 65.8%
+k=7: majority 54.9%   pass@7 67.9%
+k=8: majority 55.9%   pass@8 70.0%
+questions with no usable answer in any sample: 5 (0.5%)
+```
+
+### T=0.1
+```
+8 samples x 1000 questions
+k=1: majority 46.3%   pass@1 46.3%
+k=2: majority 50.5%   pass@2 62.4%
+k=3: majority 55.9%   pass@3 68.6%
+k=4: majority 58.6%   pass@4 72.4%
+k=5: majority 60.9%   pass@5 74.4%
+k=6: majority 62.1%   pass@6 76.7%
+k=7: majority 63.6%   pass@7 77.6%
+k=8: majority 64.6%   pass@8 78.8%
+questions with no usable answer in any sample: 0 (0.0%)
+```
