@@ -100,3 +100,4 @@ EVAL {"step": 400, "ckpt": "/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.0
 
 Sanity check only (not used): what smooth3 would pick ->
 300 /root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step300.ckpt
+=== 2026-11-02T06:01:41+08:00 pipeline done
