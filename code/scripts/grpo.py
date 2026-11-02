@@ -66,6 +66,16 @@ def run_eval(ckpt, run_name, temp, steps, split):
     return json.load(f)['accuracy']
 
 
+def trace_logp(model, tokens, rs, rounds, temperature, count_pad, chunk, method):
+  """(logp, act) for one chunk, both shapes (n, m, L) so the loss code is shared."""
+  from rl import logprob
+  if method == 'elbo':
+    return logprob.logp_elbo(model, tokens, rs, temperature, count_pad=count_pad,
+                             chunk=chunk)
+  return logprob.logp_at_rounds(model, tokens, rs, rounds, temperature,
+                                count_pad=count_pad, chunk=chunk)
+
+
 def main():
   p = argparse.ArgumentParser()
   p.add_argument('--run_name', required=True)
@@ -133,6 +143,11 @@ def main():
                  help='R44: cosine decays from the warmup plateau to lr_min_frac * lr '
                       'at the last step')
   p.add_argument('--lr_min_frac', type=float, default=0.1)
+  p.add_argument('--logprob', choices=['trajectory', 'elbo'], default='trajectory',
+                 help='D12 control arm: elbo = one masked forward per trajectory '
+                      '(d1 / diffu-GRPO style), approximates log pi(y|x) instead of '
+                      'the trajectory probability the sampler actually used. '
+                      'Everything else identical.')
   p.add_argument('--pool_size', type=int, default=0,
                  help='sanity check: train on the first N questions only (cycling)')
   args = p.parse_args()
@@ -241,9 +256,8 @@ def main():
       old = None
       if args.updates > 1:  # old log-probs of this batch, same code path and rounds
         with torch.no_grad():
-          old = [logprob.logp_at_rounds(model, tokens[c], rs[c], rounds[c],
-                                        args.temperature, count_pad=not args.no_pad,
-                                        chunk=args.chunk * args.rounds)[0]
+          old = [trace_logp(model, tokens[c], rs[c], rounds[c], args.temperature,
+                            not args.no_pad, args.chunk * args.rounds, args.logprob)[0]
                  for c in chunks]
       gnorms, clip_fracs, ratio_means = [], [], []
       n_spike = 0
@@ -251,10 +265,8 @@ def main():
         opt.zero_grad(set_to_none=True)
         tot_loss, lp_sum, lp_n, n_clip, r_sum, kl_sum = 0.0, 0.0, 0, 0.0, 0.0, 0.0
         for ci, c in enumerate(chunks):
-          lp, act = logprob.logp_at_rounds(model, tokens[c], rs[c], rounds[c],
-                                           args.temperature,
-                                           count_pad=not args.no_pad,
-                                           chunk=args.chunk * args.rounds)
+          lp, act = trace_logp(model, tokens[c], rs[c], rounds[c], args.temperature,
+                               not args.no_pad, args.chunk * args.rounds, args.logprob)
           ref = lp.detach() if old is None else old[ci]
           loss, st = grpo.grpo_loss(lp, ref, act, w[c], a[c], n_act,
                                     args.eps_low, args.eps_high)
@@ -262,10 +274,9 @@ def main():
           if ref_model is not None:
             # same canvas/rounds: the trace only differs in the weights
             with torch.no_grad():
-              lp_ref, _ = logprob.logp_at_rounds(ref_model, tokens[c], rs[c], rounds[c],
-                                                 args.temperature,
-                                                 count_pad=not args.no_pad,
-                                                 chunk=args.chunk * args.rounds)
+              lp_ref, _ = trace_logp(ref_model, tokens[c], rs[c], rounds[c],
+                                     args.temperature, not args.no_pad,
+                                     args.chunk * args.rounds, args.logprob)
             d = lp_ref - lp
             if args.kl_clip > 0:  # R44: see --kl_clip
               d = d.clamp(-args.kl_clip, args.kl_clip)

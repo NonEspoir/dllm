@@ -118,3 +118,47 @@ def logp_at_rounds(model, tokens, reveal_step, rounds, temperature,
     b, l = sel.nonzero(as_tuple=True)
     logp = logp.index_put((n_idx[b], j_idx[b], l), vals.float())
   return logp, act
+
+
+def logp_elbo(model, tokens, reveal_step, temperature, count_pad=True, chunk=64):
+  """ELBO surrogate for log pi(y|x) (D12 route A: d1 / diffu-GRPO style).
+
+  One forward per trajectory on the canvas where every completion position is
+  [MASK] (the prompt stays visible), then sum log p_theta(y_i | prompt) over the
+  completion positions. This is a single-sample estimate of the NELBO's negative
+  log-likelihood term, i.e. an approximation to log pi(y|x) that does not
+  condition on the partially generated canvas and is therefore NOT the
+  distribution the sampler used (which is why it is only the control arm).
+
+  Returns logp (N, 1, L) float32 and act (N, 1, L) bool, so it plugs into the
+  same loss machinery as logp_at_rounds (one "round" slot per trajectory).
+  Trained with the same temperature scaling as the sampler (logits / T).
+  """
+  assert not model.time_conditioning, 'canvas-only forward needs no time input'
+  N, L = tokens.shape
+  pad_id = model.tokenizer.pad_token_id
+  act = (reveal_step >= 0).unsqueeze(1)
+  if not count_pad:
+    act = act & (tokens != pad_id).unsqueeze(1)
+  logp = torch.zeros((N, 1, L), dtype=torch.float32, device=tokens.device)
+  backbone = model.backbone
+  for s in range(0, N, chunk):
+    sl = slice(s, s + chunk)
+    xt = canvas_at(tokens[sl], reveal_step[sl], torch.zeros(len(tokens[sl]),
+                   dtype=torch.long, device=tokens.device), model.mask_index)
+    sigma = model._process_sigma(torch.zeros(len(xt), 1, device=tokens.device))
+    with torch.amp.autocast('cuda', dtype=torch.float32):
+      hidden, _ = fast_sampler._backbone_hidden(backbone, xt, sigma)
+    sel = act[sl, 0]                              # (c, L)
+    rows = torch.full((int(sel.sum()), 1), model.mask_index,
+                      dtype=torch.long, device=tokens.device)
+    with torch.amp.autocast('cuda', dtype=torch.float32):
+      logits = fast_sampler._output_logits(backbone, hidden[sel])
+    logits = logits.float() / temperature
+    lp = model._process_model_output(
+      model_output=logits[:, None, :], xt=rows, sigma=None)[:, 0]
+    tok = tokens[sl][sel]
+    vals = lp.gather(-1, tok[:, None])[:, 0].float()
+    b, l = sel.nonzero(as_tuple=True)
+    logp[s + b, 0, l] = vals
+  return logp, act
