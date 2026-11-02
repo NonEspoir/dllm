@@ -173,15 +173,16 @@ def check_elbo_model(model, tokens, reveal_step, tok):
   # direct recompute: all completion positions masked, one forward, compare
   xt = torch.where(reveal_step >= 0, torch.full_like(tokens, model.mask_index), tokens)
   sigma = model._process_sigma(torch.zeros(len(tokens), 1, device=tokens.device))
+  sel = expect                                   # (N, L) completion positions
+  rows = torch.full((int(sel.sum()), 1), model.mask_index, dtype=torch.long,
+                    device=tokens.device)
   with torch.no_grad():
     h, _ = fast_sampler._backbone_hidden(model.backbone, xt, sigma)
-    logits = fast_sampler._output_logits(model.backbone, h).float() / temperature
-    rows = torch.full((len(tokens), 1), model.mask_index, dtype=torch.long,
-                      device=tokens.device)
+    logits = fast_sampler._output_logits(model.backbone, h[sel]).float() / temperature
     lp = model._process_model_output(model_output=logits[:, None, :], xt=rows,
                                      sigma=None)[:, 0]
-    ref = lp.gather(-1, tokens[:, :, None])[:, :, 0].float()
-  diff = (ref[expect] - logp[:, 0][expect]).abs().max()
+    ref = lp.gather(-1, tokens[sel][:, None])[:, 0].float()
+  diff = (ref - logp[:, 0][expect]).abs().max()   # both already selected
   print(f'[gpu] ELBO: {int(expect.sum())} actions, mean {float(vals.mean()):.3f}, '
         f'max |recompute - logp_elbo| {float(diff):.2e}')
   return float(diff) < 1e-4
