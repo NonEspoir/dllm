@@ -1,0 +1,36 @@
+=== 2026-11-03T13:03:21+08:00 pipeline d8 start
+=== 2026-11-03T13:03:21+08:00 start 1103-dev-base-mv-T1.0-seed1
+=== 2026-11-03T13:08:46+08:00 end 1103-dev-base-mv-T1.0-seed1 exit=0
+=== 2026-11-03T13:08:46+08:00 start 1103-dev-base-mv-T1.0-seed2
+=== 2026-11-03T13:14:11+08:00 end 1103-dev-base-mv-T1.0-seed2 exit=0
+=== 2026-11-03T13:14:11+08:00 start 1103-dev-base-mv-T1.0-seed3
+=== 2026-11-03T13:20:07+08:00 end 1103-dev-base-mv-T1.0-seed3 exit=0
+=== 2026-11-03T13:20:07+08:00 start 1103-dev-base-mv-T1.0-seed4
+=== 2026-11-03T13:25:42+08:00 end 1103-dev-base-mv-T1.0-seed4 exit=0
+=== 2026-11-03T13:25:42+08:00 start 1103-dev-base-mv-T1.0-seed5
+=== 2026-11-03T13:31:27+08:00 end 1103-dev-base-mv-T1.0-seed5 exit=0
+=== 2026-11-03T13:31:27+08:00 start 1103-dev-base-mv-T1.0-seed6
+=== 2026-11-03T13:36:53+08:00 end 1103-dev-base-mv-T1.0-seed6 exit=0
+=== 2026-11-03T13:36:53+08:00 start 1103-dev-base-mv-T1.0-seed7
+=== 2026-11-03T13:42:29+08:00 end 1103-dev-base-mv-T1.0-seed7 exit=0
+=== 2026-11-03T13:42:29+08:00 start 1103-dev-base-mv-T1.0-seed8
+=== 2026-11-03T13:48:04+08:00 end 1103-dev-base-mv-T1.0-seed8 exit=0
+=== 2026-11-03T13:48:04+08:00 start 1103-dev-base-mv-T0.1-seed1
+=== 2026-11-03T13:53:29+08:00 end 1103-dev-base-mv-T0.1-seed1 exit=0
+=== 2026-11-03T13:53:29+08:00 start 1103-dev-base-mv-T0.1-seed2
+=== 2026-11-03T13:59:04+08:00 end 1103-dev-base-mv-T0.1-seed2 exit=0
+=== 2026-11-03T13:59:04+08:00 start 1103-dev-base-mv-T0.1-seed3
+=== 2026-11-03T14:04:38+08:00 end 1103-dev-base-mv-T0.1-seed3 exit=0
+=== 2026-11-03T14:04:38+08:00 start 1103-dev-base-mv-T0.1-seed4
+=== 2026-11-03T14:10:13+08:00 end 1103-dev-base-mv-T0.1-seed4 exit=0
+=== 2026-11-03T14:10:13+08:00 start 1103-dev-base-mv-T0.1-seed5
+=== 2026-11-03T14:15:49+08:00 end 1103-dev-base-mv-T0.1-seed5 exit=0
+=== 2026-11-03T14:15:49+08:00 start 1103-dev-base-mv-T0.1-seed6
+=== 2026-11-03T14:21:14+08:00 end 1103-dev-base-mv-T0.1-seed6 exit=0
+=== 2026-11-03T14:21:14+08:00 start 1103-dev-base-mv-T0.1-seed7
+=== 2026-11-03T14:26:39+08:00 end 1103-dev-base-mv-T0.1-seed7 exit=0
+=== 2026-11-03T14:26:39+08:00 start 1103-dev-base-mv-T0.1-seed8
+=== 2026-11-03T14:32:05+08:00 end 1103-dev-base-mv-T0.1-seed8 exit=0
+=== 2026-11-03T14:32:05+08:00 smoke: 2 steps, formal arguments
+=== 2026-11-03T14:33:51+08:00 smoke ok
+=== 2026-11-03T14:33:51+08:00 start 1103-grpo-elbo-conv-fmt0.1-kl0.04
