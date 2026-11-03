@@ -1,0 +1,20 @@
+<sample>:8: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:8: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:9: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:9: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:11: SyntaxWarning: 'float' object is not callable; perhaps you missed a comma?
+<sample>:11: SyntaxWarning: 'float' object is not callable; perhaps you missed a comma?
+<sample>:15: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:15: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:12: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:12: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+<sample>:11: SyntaxWarning: 'float' object is not callable; perhaps you missed a comma?
+<sample>:11: SyntaxWarning: 'float' object is not callable; perhaps you missed a comma?
+| run | correct | wrong | runtime | syntax | no_fn | `"""` | `'''` | mean chars |
+|---|---|---|---|---|---|---|---|---|
+| 1030-eval-base-s512-T1.0 | 180 | 429 | 383 | 7 | 1 | 267 | 733 | 545 |
+| 1030-eval-base-s512-T0.1 | 386 | 474 | 138 | 2 | 0 | 105 | 895 | 485 |
+| 1103-grpo-elbo-conv-fmt0.1-nokl-last-dev-e512-T1.0 | 500 | 448 | 46 | 6 | 0 | 2 | 998 | 450 |
+| 1103-grpo-elbo-conv-fmt0.1-nokl-last-dev-e512-T0.1 | 505 | 452 | 38 | 5 | 0 | 0 | 1000 | 448 |
+| 1101-grpo-conv-fmt0.1-kl0.04-last-dev-e512-T1.0 | 308 | 475 | 207 | 9 | 1 | 196 | 804 | 502 |
+| 1101-grpo-conv-fmt0.1-kl0.04-last-dev-e512-T0.1 | 463 | 463 | 74 | 0 | 0 | 90 | 910 | 470 |

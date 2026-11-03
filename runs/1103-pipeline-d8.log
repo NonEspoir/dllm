@@ -192,3 +192,4 @@ questions with no usable answer in any sample: 0 (0.0%)
 test elboconv 512 步 T=1.0: 42.84% CI [40.1, 45.6]
 test elboconv 512 步 T=0.1: 45.41% CI [42.7, 48.2]
 test elboconv 1024 步 T=1.0: 43.14% CI [40.6, 45.7]
+=== 2026-11-03T20:56:46+08:00 pipeline done
