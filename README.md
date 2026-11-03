@@ -121,6 +121,7 @@ python -m tests.test_grpo_direction  # 一次更新的方向正确
 ```bash
 python scripts/make_figures.py                   # 全部 8 张，输出到 docs/figures/，不需要 GPU
 python scripts/make_figures.py fig_dev200_curves # 只画一张
+python scripts/make_slides.py                    # 演示用 slides：docs/slides.pptx（需要 python-pptx）
 ```
 
 每张图都从 `runs/` 里的指标重新生成。
