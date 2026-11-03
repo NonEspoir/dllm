@@ -2,9 +2,9 @@
 # R46 (D37): three pieces, unattended, then shut down (>= 3 h rule, R30).
 #   1. base majority vote on dev: 8 different seeds x T in {1, 0.1}, 512 steps
 #      + skip -- the same-budget control for the final model's vote (D16).
-#   2. ELBO convergence run: exactly the D35 convergence recipe (format 0.1,
-#      KL 0.04 with k3 clipped, spike skip 10x, cosine lr 3e-5 -> 3e-6, 400
-#      steps, brake, keep only the latest checkpoint) except --logprob elbo.
+#   2. ELBO convergence run: the D35 convergence recipe (format 0.1, spike
+#      skip 10x, cosine lr 3e-5 -> 3e-6, 400 steps, brake, keep only the latest
+#      checkpoint) with --logprob elbo and WITHOUT KL (R46c, see NAME below).
 #      Rule fixed in advance: its LAST checkpoint goes to dev1000.
 #   3. Final model (D37 rule, user's choice in R46): among the candidates
 #        convergence run step 400 (trajectory), ELBO arm step 150, ELBO
@@ -23,9 +23,14 @@ D="${D:?}"
 SHUTDOWN="${SHUTDOWN:-0}"
 LOG="${RUNS}/${D}-pipeline-d8.log"
 BASE_CKPT="/root/autodl-tmp/checkpoints/tinygsm/mdlm.ckpt"
-NAME="${D}-grpo-elbo-conv-fmt0.1-kl0.04"
-ARGS=(--logprob elbo --lr 3e-5 --updates 4 --no_std --format_reward 0.1 --kl 0.04
-      --kl_clip 20 --kl_max 10 --spike_ratio 10 --lr_schedule cosine --lr_min_frac 0.1
+# R46c: no KL. The first attempt (…-kl0.04, aborted at step 24) used beta 0.04
+# from the trajectory recipe, but the KL between full-mask marginals is ~1000x
+# the trajectory KL (6-7 vs 0.006 nats/action by step 20), so beta*KL was ~10x
+# the policy-gradient loss and dominated training. The 150-step ELBO arm had no
+# KL and did not diverge.
+NAME="${D}-grpo-elbo-conv-fmt0.1-nokl"
+ARGS=(--logprob elbo --lr 3e-5 --updates 4 --no_std --format_reward 0.1
+      --spike_ratio 10 --lr_schedule cosine --lr_min_frac 0.1
       --steps 400 --eval_every 25 --keep_ckpts last --stop_ratio 2.0 --stop_window 10)
 export TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 OMP_NUM_THREADS=8 TOKENIZERS_PARALLELISM=false
 exec > >(tee -a "${LOG}") 2>&1
@@ -109,6 +114,15 @@ if [[ "${FTAG}" != "conv400" && -f "${FCKPT}" ]]; then
   ev test "${FCKPT}" 512  1.0 "${D}-test-${FTAG}-s512-T1.0"
   ev test "${FCKPT}" 512  0.1 "${D}-test-${FTAG}-s512-T0.1"
   ev test "${FCKPT}" 1024 1.0 "${D}-test-${FTAG}-s1024-T1.0"
+fi
+
+# 3b. demo on the new final model (R46b: avoids another boot just for the demo)
+if [[ "${FTAG}" != "conv400" && -f "${FCKPT}" ]]; then
+  echo "=== $(date -Is) demo on ${FTAG}"
+  timeout 1800 python -m scripts.demo --split dev --ids 3 17 42 88 137 \
+    --ckpts "base:${BASE_CKPT}" "final:${FCKPT}" --temperature 0.1 \
+    --out "${RUNS}/${D}-demo-final-cards.json" > "${RUNS}/${D}-demo-final.txt" 2>&1
+  echo "=== demo exit=$?"
 fi
 
 # 4. summary
