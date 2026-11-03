@@ -1,6 +1,6 @@
 # Slides 大纲与 demo 设计
 
-> 写于 2026-11-02（R45）。配合 [11-报告草稿.md](11-报告草稿.md) 使用；数字抄自那里，test 那页等 D6 出来再填。
+> 写于 2026-11-02（R45），11-03（R48）按最终结果更新：定稿 = ELBO 收敛轮第 400 步。配合 [11-报告草稿.md](11-报告草稿.md) 使用；数字抄自那里，test 那页等 D6 出来再填。
 > 演示日 15–20 分钟，重点讲**思路和过程**（题目要求"实际进度和思考过程比展示形式更重要"）。
 
 ---
@@ -9,20 +9,20 @@
 
 | # | 标题 | 内容要点 | 视觉 |
 |---|---|---|---|
-| 1 | 一句话结论 | 模仿没用，试错有用；RL 后 18→31（T=1）、38.6→46.3（T=0.1） | 大字 + `figures/fig_test_main.png` |
+| 1 | 一句话结论 | 模仿没用，试错有用；test 上 RL 后 15.2→42.8（T=1）、32.4→45.4（T=0.1），论文设置 16.0→43.1 | 大字 + `figures/fig_test_main.png` |
 | 2 | 任务与模型 | MDLM 170M、TinyGSM 预训练、答案是可执行的 Python | 模型卡片 |
 | 3 | 起点：18% 与 38.6% | 同一个模型只调温度翻倍 → 大部分答案"本来就会" | 直接给两个大数字 |
 | 4 | 让考试变快 | 采样器 2 倍、显存 1/9、三层等价验证 | 表：原版 vs 新版 |
 | 5 | SFT：准备了很好的数据，但没有用 | 6232 条、错误率 0.3%；结果持平/更差 | `figures/fig_sft.png`（loss 降、准确率不涨）+ 一句"学的是写法" |
 | 6 | 为什么 SFT 没用 | 诊断：docstring 换了、语法错归零、但 NameError 增加；loss 越低越差 | 错误分类表 |
 | 7 | RL 怎么做 | GRPO：同题 8 个答案自己跟自己比；奖励 = 执行正确 | 一张流程图（rollout → 组内优势 → 轨迹 log-prob → clip 更新） |
-| 8 | 我们的技术点：精确轨迹概率 | π(y\|x) 算不出，但 π(τ) 能精确算；8 轮分层无偏 | 公式页，讲清"哪些位置揭开与 θ 无关" |
-| 9 | 结果 | 五种配方表；全部显著好于 base；彼此不显著 | `figures/fig_dev200_curves.png` + 主表 |
-| 10 | RL 会崩，以及怎么救 | log-prob −0.07 → −1.8、输出变乱码；格式分只推迟；KL + 衰减才治住 | `figures/fig_health_logp.png` |
+| 8 | log-prob 怎么算：精确轨迹 vs ELBO | π(y\|x) 算不出，π(τ) 能精确算（8 轮分层无偏）；对照是 d1 式 ELBO。**结果与预期相反：ELBO 更好**（test 42.8 vs 27.4）、快 4–5 倍；机制只有推测 | 公式页 + 一张两行对比表 |
+| 9 | 结果 | 轨迹法五种配方彼此不显著；ELBO 两轮一致地高约 11pp；全部显著好于 base | `figures/fig_dev200_curves.png` + `figures/fig_test_main.png` |
+| 10 | RL 会崩，以及怎么救 | log-prob −0.07 → −1.8、输出变乱码；格式分只推迟；KL + 衰减才治住；换成 ELBO 后照搬 KL 系数反而压住训练（量级差约 1000 倍） | `figures/fig_health_logp.png` |
 | 11 | 一个反直觉结论：先 SFT 再 RL 更差 | T=1 25.9 vs 31.6，p=0.0005；分布被压窄后更难探索 | 两行对比 |
 | 12 | 能力上限 | 170M 容量、合成数据、一次生成无草稿；AR 同等数据也只 54–63% | `figures/fig_vote.png`（pass@k 远高于单次） |
-| 13 | 过程反思 | 无效尝试、踩过的坑、被更正的判断（选点、KL 归因、pass@8） | 三条 bullet |
-| 14 | 下一步 | ELBO 对照、数据侧、规模侧、解码侧 | 四条 bullet |
+| 13 | 过程反思 | 无效尝试、踩过的坑、被更正的判断（选点、KL 归因、pass@8、ELBO 预期） | 三条 bullet |
+| 14 | 下一步 | 弄清 ELBO 为什么更好（多 seed、梯度拆分）、数据侧、规模侧、解码侧 | 四条 bullet |
 
 **讲述节奏建议**：
 
@@ -48,7 +48,7 @@
 # 指定题目：dev 中的第 3、17、42 题，baseline 与 RL 定稿各生成一次
 python -m scripts.demo --split dev --ids 3 17 42 \
   --ckpts base:/root/autodl-tmp/checkpoints/tinygsm/mdlm.ckpt \
-          rl:/root/autodl-tmp/rl_ckpt/1101-grpo-conv-fmt0.1-kl0.04/step400.ckpt
+          rl:/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step400.ckpt
 ```
 
 输出：每题一张卡片，包含题目、标准答案、两个模型各自的代码、执行得到的数字、判定（对 / 能跑但错 / 报错）。
@@ -75,4 +75,4 @@ python -m scripts.demo --split dev --ids 3 17 42 \
 | 步数鲁棒性曲线 | D6 | `[待 D6]` |
 | 多数投票 k=1…8 曲线 | D6 | `[待 D6]` |
 | 训练耗时与花费表 | 06「运行记录」 | 已有，需汇总成一张表 |
-| demo 样例 | `scripts/demo.py` | 脚本已写，需 GPU 跑 |
+| demo 样例 | `runs/1103-demo-final.txt`（base vs 定稿，dev 3/17/42/88/137，T=0.1：base 2/5、定稿 3/5） | 已有 |
