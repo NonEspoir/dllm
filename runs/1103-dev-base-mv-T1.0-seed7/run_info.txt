@@ -1,0 +1,15 @@
+git_commit: 57c86fb5c6b2ff4a0c830334ac73ee680ed941fe
+git_dirty: 9
+split: dev
+sampler: fast_ancestral
+steps: 512
+temperature: 1.0
+batch: 200
+seed: 7
+ckpt: /root/autodl-tmp/checkpoints/tinygsm/mdlm.ckpt
+extra: sampler.skip_unchanged=true
+gpu: NVIDIA A800 80GB PCIe
+start: 2026-11-03T13:36:53+08:00
+end: 2026-11-03T13:42:23+08:00
+wall_seconds: 330
+peak_gpu_mem_mib: 15431

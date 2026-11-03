@@ -1,0 +1,118 @@
+{
+ "evals": [
+  {
+   "step": 25,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step25.ckpt",
+   "acc_T1.0": 0.36,
+   "acc_T0.1": 0.445,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 50,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step50.ckpt",
+   "acc_T1.0": 0.445,
+   "acc_T0.1": 0.49,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 75,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step75.ckpt",
+   "acc_T1.0": 0.51,
+   "acc_T0.1": 0.51,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 100,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step100.ckpt",
+   "acc_T1.0": 0.5,
+   "acc_T0.1": 0.54,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 125,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step125.ckpt",
+   "acc_T1.0": 0.5,
+   "acc_T0.1": 0.545,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 150,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step150.ckpt",
+   "acc_T1.0": 0.515,
+   "acc_T0.1": 0.505,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 175,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step175.ckpt",
+   "acc_T1.0": 0.515,
+   "acc_T0.1": 0.51,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 200,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step200.ckpt",
+   "acc_T1.0": 0.515,
+   "acc_T0.1": 0.5,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 225,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step225.ckpt",
+   "acc_T1.0": 0.545,
+   "acc_T0.1": 0.5,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 250,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step250.ckpt",
+   "acc_T1.0": 0.515,
+   "acc_T0.1": 0.485,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 275,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step275.ckpt",
+   "acc_T1.0": 0.51,
+   "acc_T0.1": 0.47,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 300,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step300.ckpt",
+   "acc_T1.0": 0.5,
+   "acc_T0.1": 0.49,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 325,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step325.ckpt",
+   "acc_T1.0": 0.535,
+   "acc_T0.1": 0.48,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 350,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step350.ckpt",
+   "acc_T1.0": 0.5,
+   "acc_T0.1": 0.495,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 375,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step375.ckpt",
+   "acc_T1.0": 0.535,
+   "acc_T0.1": 0.495,
+   "ckpt_deleted": true
+  },
+  {
+   "step": 400,
+   "ckpt": "/root/autodl-tmp/rl_ckpt/1103-grpo-elbo-conv-fmt0.1-nokl/step400.ckpt",
+   "acc_T1.0": 0.525,
+   "acc_T0.1": 0.5
+  }
+ ],
+ "stopped_early": null,
+ "train_seconds": 19339.9,
+ "peak_gpu_mem_mib": 8800
+}

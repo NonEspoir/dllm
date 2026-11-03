@@ -1,0 +1,174 @@
+/root/miniconda3/lib/python3.12/site-packages/lightning/pytorch/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.6.0, which is newer than your current Lightning version: v2.5.1
+/root/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1617: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be deprecated in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+/root/miniconda3/lib/python3.12/site-packages/lightning/pytorch/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.6.0, which is newer than your current Lightning version: v2.5.1
+/root/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1617: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be deprecated in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+==============================================================================
+[dev #3] Emma's bank account has $100 in it. Each day of the week, she spends $8. At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her. She leaves the rest in the account. How many dollars remain in the account?
+gold: <8*5=40>>40
+She has $4 left in the account because 44 - 40 = <<44-40=4>>4
+#### 4
+------------------------------------------------------------------------------
+base: wrong
+def simple_math_problem() -> int:
+    '''
+    Emma's bank account has $100 in it.
+    Each day of the week, she spends $8.
+    At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her.
+    She leaves the rest in the account.
+    How many dollars remain in the account?
+    '''
+    account_balance = 100
+    daily_spending = 8
+    weekly_spending = 7 * daily_spending
+    remaining_balance = account_balance - weekly_spending
+    bills_given = remaining_balance // 5
+    result = remaining_balance
+    return result
+------------------------------------------------------------------------------
+final: wrong
+def simple_math_problem() -> int:
+    '''
+    Emma's bank account has $100 in it.
+    Each day of the week, she spends $8.
+    At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her.
+    She leaves the rest in the account.
+    How many dollars remain in the account?
+    '''
+    account = 100
+    spent = 8 * 7
+    remaining = account - spent
+    bills = remaining // 5
+    result = bills
+    return result
+==============================================================================
+[dev #17] James buys 20 coins of a cryptocurrency at $15 each.  The value of the coins increases by 2/3.  He sells coins to recoup his original investment.  How many coins did he sell?
+gold:  was worth 15+10=$<<15+10=25>>25
+So he sold 300/25=<<300/25=12>>12 coins
+#### 12
+------------------------------------------------------------------------------
+base: wrong
+def simple_math_problem() -> int:
+    '''
+    James 20 coins of a cryptocurrency at $15 each each.
+     The value of the coins increases by 2/3.
+     He sells coins to recoup his original investment.
+     How many coins did he sell?
+    '''
+    coins = 20
+    price = 15
+    increased_value = price * (2/3)
+    coins_sold = coins - increased_value
+    result = coins_sold
+    return result
+------------------------------------------------------------------------------
+final: wrong
+def simple_math_problem() -> int:
+    '''
+    James buys 20 coins of a cryptocurrency at $15 each.
+    The value of the coins increases by 2/3.
+    He sells coins to recoup his original investment.
+    How many many coins did he sell?
+    '''
+    total_cost = 20 * 15
+    increased_value = total_cost * 2/3
+    coins_sold = total_cost / increased_value
+    result = coins_sold
+    return result
+==============================================================================
+[dev #42] Stella collects stamps. She counted 50 pages in her collector's album. There are 5 rows of 30 stamps in each of the first 10 pages of her album. The rest of the pages each have 50 stamps. How many stamps are in Stella's album?
+gold: , Stella has 2000 + 1500 = <<2000+1500=3500>>3500 stamps in her album.
+#### 3500
+------------------------------------------------------------------------------
+base: runtime
+def simple_math_problem() -> int:
+    '''
+    Stella collects stamps.
+    She counted 50 pages in her collector's album.
+    There are 5 rows of 30 stamps in each of the first 10 pages of her album.
+    The rest of the pages each have 50 stamps.
+    How many stamps are in Stella's album?
+    '''
+    # Calculation for the problem
+    stamps_in_first_10_pages = 5 * 30
+    stamps_in_rest_of__pages = (50 * 50) - (50 - 10)
+    total_stamps = stamps_in_first_10_pages + stamps_in_rest_of__pages
+    result = stamps_total
+    return result
+------------------------------------------------------------------------------
+final: correct
+def simple_math_problem() -> int:
+    '''
+    Stella collects stamps.
+    She counted 50 pages in her collector's album.
+    There are 5 rows of 30 stamps in each of the first 10 pages of her album.
+    The rest of the pages each have 50 stamps.
+    How many stamps are in Stella's album?
+    '''
+    first_pages = 10 * 5 * 30
+    rest_pages = 40 * 50
+    result = first_pages + rest_pages
+    return result
+==============================================================================
+[dev #88] Pauline has a garden with vegetables. In it, Pauline has planted 3 kinds of tomatoes - 5 of each kind, 5 kinds of cucumbers - 4 of each kind, and 30 potatoes. In the whole garden, there are 10 rows with 15 spaces in each to plant any vegetable. How many more vegetables could Pauline plant in her garden?
+gold: ne could plant 150 - 65 = <<150-65=85>>85 more vegetables in her garden.
+#### 85
+------------------------------------------------------------------------------
+base: correct
+def simple_math_problem() -> int:
+    '''
+    Pauline has a garden with vegetables.
+    In it, Pauline has planted 3 kinds of tomatoes - 5 of each kind, 5 kinds of cucumbers - 4 of each kind, and 30 potatoes.
+    In the whole garden, there are 10 rows with 15 spaces in each to plant any vegetable.
+    How many more vegetables could Pauline plant in her garden?
+    '''
+    tomatoes_planted = 3 * 5
+    cucumbers_planted = 5 * 4
+    potatoes_planted = 30
+    total_planted = tomatoes_planted + cucumbers_planted + potatoes_planted
+    remaining_spaces = (10 * 15) - total_planted
+    result = remaining_spaces
+    return result
+------------------------------------------------------------------------------
+final: correct
+def simple_math_problem() -> int:
+    '''
+    Pauline has a garden with vegetables.
+    In it, Pauline has planted 3 kinds of tomatoes - 5 of each kind, 5 kinds of cucumbers - 4 of each kind, and 30 potatoes.
+    In the whole garden, there are 10 rows with 15 spaces in each to plant any vegetable.
+    How many more vegetables could Pauline plant in her garden?
+    '''
+    total_vegetables = 3 * 5 + 5 * 4 + 30
+    total_spaces = 10 * 15
+    remaining_vegetables = total_spaces - total_vegetables
+    result = remaining_vegetables
+    return result
+==============================================================================
+[dev #137] Smith’s Bakery sold 6 more than four times the number of pies that Mcgee’s Bakery sold. If Mcgee’s Bakery sold 16 pies, how many pies did Smith’s Bakery sell?
+gold: d is 16*4=<<16*4=64>>64 pies
+Smith’s Bakery sold 64+6=<<64+6=70>>70 pies
+#### 70
+------------------------------------------------------------------------------
+base: correct
+def simple_math_problem() -> int:
+    '''
+    Smith’s Bakery sold 6 more than four times the number of pies that Mcgee’s Bakery sold.
+    If Mcgee’s Bakery sold 16 pies, how many pies did Smith’s Bakery sell?
+    '''
+    pies_mcgeie = 16
+    pies_smith = 6 + 4 * pies_mcgeie
+    result = pies_smith
+    return result
+------------------------------------------------------------------------------
+final: correct
+def simple_math_problem() -> int:
+    '''
+    Smith’s Bakery sold 6 more than four times the number of pies that Mcgee’s Bakery sold.
+    If Mcgee’s Bakery sold 16 pies, how many pies did Smith’s Bakery sell?
+    '''
+    mkgee_pies = 16
+    smith_pies = 4 * mkgee_pies + 6
+    result = smith_pies
+    return result
+wrote /root/autodl-tmp/dllm/runs/1103-demo-final-cards.json
