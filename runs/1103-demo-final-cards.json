@@ -1,0 +1,92 @@
+[
+ {
+  "ckpt": "base",
+  "split": "dev",
+  "index": 3,
+  "question": "Emma's bank account has $100 in it. Each day of the week, she spends $8. At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her. She leaves the rest in the account. How many dollars remain in the account?",
+  "gold": "She spend $56 because 7 x 8 = <<7*8=56>>56\nShe has $44 left in the bank because 100 - 56 = <<100-56=44>>44\nShe can get 8 five dollar bills because 44 / 5 = <<44/5=8.8>>8.8\nThis is equal to $40 because 8 x 5 = <<8*5=40>>40\nShe has $4 left in the account because 44 - 40 = <<44-40=4>>4\n#### 4",
+  "code": "def simple_math_problem() -> int:\n    '''\n    Emma's bank account has $100 in it.\n    Each day of the week, she spends $8.\n    At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her.\n    She leaves the rest in the account.\n    How many dollars remain in the account?\n    '''\n    account_balance = 100\n    daily_spending = 8\n    weekly_spending = 7 * daily_spending\n    remaining_balance = account_balance - weekly_spending\n    bills_given = remaining_balance // 5\n    result = remaining_balance\n    return result",
+  "category": "wrong"
+ },
+ {
+  "ckpt": "base",
+  "split": "dev",
+  "index": 17,
+  "question": "James buys 20 coins of a cryptocurrency at $15 each.  The value of the coins increases by 2/3.  He sells coins to recoup his original investment.  How many coins did he sell?",
+  "gold": "His original investment was 15*20=$<<15*20=300>>300\nThe value of his investment increases by 15*2/3=$<<15*2/3=10>>10 per coin\nSo each coin was worth 15+10=$<<15+10=25>>25\nSo he sold 300/25=<<300/25=12>>12 coins\n#### 12",
+  "code": "def simple_math_problem() -> int:\n    '''\n    James 20 coins of a cryptocurrency at $15 each each.\n     The value of the coins increases by 2/3.\n     He sells coins to recoup his original investment.\n     How many coins did he sell?\n    '''\n    coins = 20\n    price = 15\n    increased_value = price * (2/3)\n    coins_sold = coins - increased_value\n    result = coins_sold\n    return result",
+  "category": "wrong"
+ },
+ {
+  "ckpt": "base",
+  "split": "dev",
+  "index": 42,
+  "question": "Stella collects stamps. She counted 50 pages in her collector's album. There are 5 rows of 30 stamps in each of the first 10 pages of her album. The rest of the pages each have 50 stamps. How many stamps are in Stella's album?",
+  "gold": "There are 30 x 5 = <<30*5=150>>150 stamps on each of the first 10 pages.\nSo she has a total of 150 x 10 = <<150*10=1500>>1500 stamps in the first 10 pages.\nThere are 50 - 10 = <<50-10=40>>40 pages that have 50 stamps each.\nThere is a total of 40 x 50 = <<40*50=2000>>2000 stamps in the remaining 40 pages.\nTherefore, Stella has 2000 + 1500 = <<2000+1500=3500>>3500 stamps in her album.\n#### 3500",
+  "code": "def simple_math_problem() -> int:\n    '''\n    Stella collects stamps.\n    She counted 50 pages in her collector's album.\n    There are 5 rows of 30 stamps in each of the first 10 pages of her album.\n    The rest of the pages each have 50 stamps.\n    How many stamps are in Stella's album?\n    '''\n    # Calculation for the problem\n    stamps_in_first_10_pages = 5 * 30\n    stamps_in_rest_of__pages = (50 * 50) - (50 - 10)\n    total_stamps = stamps_in_first_10_pages + stamps_in_rest_of__pages\n    result = stamps_total\n    return result",
+  "category": "runtime"
+ },
+ {
+  "ckpt": "base",
+  "split": "dev",
+  "index": 88,
+  "question": "Pauline has a garden with vegetables. In it, Pauline has planted 3 kinds of tomatoes - 5 of each kind, 5 kinds of cucumbers - 4 of each kind, and 30 potatoes. In the whole garden, there are 10 rows with 15 spaces in each to plant any vegetable. How many more vegetables could Pauline plant in her garden?",
+  "gold": "Pauline planted in total 3 * 5 = <<3*5=15>>15 tomatoes.\nPauline also planted 5 * 4 = <<5*4=20>>20 cucumbers.\nIn total Pauline planted 15 + 20 + 30 = <<15+20+30=65>>65 different vegetables.\nThe whole garden can be filled up with 10 * 15 = <<10*15=150>>150 different vegetables.\nSo Pauline could plant 150 - 65 = <<150-65=85>>85 more vegetables in her garden.\n#### 85",
+  "code": "def simple_math_problem() -> int:\n    '''\n    Pauline has a garden with vegetables.\n    In it, Pauline has planted 3 kinds of tomatoes - 5 of each kind, 5 kinds of cucumbers - 4 of each kind, and 30 potatoes.\n    In the whole garden, there are 10 rows with 15 spaces in each to plant any vegetable.\n    How many more vegetables could Pauline plant in her garden?\n    '''\n    tomatoes_planted = 3 * 5\n    cucumbers_planted = 5 * 4\n    potatoes_planted = 30\n    total_planted = tomatoes_planted + cucumbers_planted + potatoes_planted\n    remaining_spaces = (10 * 15) - total_planted\n    result = remaining_spaces\n    return result",
+  "category": "correct"
+ },
+ {
+  "ckpt": "base",
+  "split": "dev",
+  "index": 137,
+  "question": "Smith’s Bakery sold 6 more than four times the number of pies that Mcgee’s Bakery sold. If Mcgee’s Bakery sold 16 pies, how many pies did Smith’s Bakery sell?",
+  "gold": "Four times the number of pies that Mcgee’s sold is 16*4=<<16*4=64>>64 pies\nSmith’s Bakery sold 64+6=<<64+6=70>>70 pies\n#### 70",
+  "code": "def simple_math_problem() -> int:\n    '''\n    Smith’s Bakery sold 6 more than four times the number of pies that Mcgee’s Bakery sold.\n    If Mcgee’s Bakery sold 16 pies, how many pies did Smith’s Bakery sell?\n    '''\n    pies_mcgeie = 16\n    pies_smith = 6 + 4 * pies_mcgeie\n    result = pies_smith\n    return result",
+  "category": "correct"
+ },
+ {
+  "ckpt": "final",
+  "split": "dev",
+  "index": 3,
+  "question": "Emma's bank account has $100 in it. Each day of the week, she spends $8. At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her. She leaves the rest in the account. How many dollars remain in the account?",
+  "gold": "She spend $56 because 7 x 8 = <<7*8=56>>56\nShe has $44 left in the bank because 100 - 56 = <<100-56=44>>44\nShe can get 8 five dollar bills because 44 / 5 = <<44/5=8.8>>8.8\nThis is equal to $40 because 8 x 5 = <<8*5=40>>40\nShe has $4 left in the account because 44 - 40 = <<44-40=4>>4\n#### 4",
+  "code": "def simple_math_problem() -> int:\n    '''\n    Emma's bank account has $100 in it.\n    Each day of the week, she spends $8.\n    At the end of the week, she goes to the bank and asks for as many $5 bills as her account can give her.\n    She leaves the rest in the account.\n    How many dollars remain in the account?\n    '''\n    account = 100\n    spent = 8 * 7\n    remaining = account - spent\n    bills = remaining // 5\n    result = bills\n    return result",
+  "category": "wrong"
+ },
+ {
+  "ckpt": "final",
+  "split": "dev",
+  "index": 17,
+  "question": "James buys 20 coins of a cryptocurrency at $15 each.  The value of the coins increases by 2/3.  He sells coins to recoup his original investment.  How many coins did he sell?",
+  "gold": "His original investment was 15*20=$<<15*20=300>>300\nThe value of his investment increases by 15*2/3=$<<15*2/3=10>>10 per coin\nSo each coin was worth 15+10=$<<15+10=25>>25\nSo he sold 300/25=<<300/25=12>>12 coins\n#### 12",
+  "code": "def simple_math_problem() -> int:\n    '''\n    James buys 20 coins of a cryptocurrency at $15 each.\n    The value of the coins increases by 2/3.\n    He sells coins to recoup his original investment.\n    How many many coins did he sell?\n    '''\n    total_cost = 20 * 15\n    increased_value = total_cost * 2/3\n    coins_sold = total_cost / increased_value\n    result = coins_sold\n    return result",
+  "category": "wrong"
+ },
+ {
+  "ckpt": "final",
+  "split": "dev",
+  "index": 42,
+  "question": "Stella collects stamps. She counted 50 pages in her collector's album. There are 5 rows of 30 stamps in each of the first 10 pages of her album. The rest of the pages each have 50 stamps. How many stamps are in Stella's album?",
+  "gold": "There are 30 x 5 = <<30*5=150>>150 stamps on each of the first 10 pages.\nSo she has a total of 150 x 10 = <<150*10=1500>>1500 stamps in the first 10 pages.\nThere are 50 - 10 = <<50-10=40>>40 pages that have 50 stamps each.\nThere is a total of 40 x 50 = <<40*50=2000>>2000 stamps in the remaining 40 pages.\nTherefore, Stella has 2000 + 1500 = <<2000+1500=3500>>3500 stamps in her album.\n#### 3500",
+  "code": "def simple_math_problem() -> int:\n    '''\n    Stella collects stamps.\n    She counted 50 pages in her collector's album.\n    There are 5 rows of 30 stamps in each of the first 10 pages of her album.\n    The rest of the pages each have 50 stamps.\n    How many stamps are in Stella's album?\n    '''\n    first_pages = 10 * 5 * 30\n    rest_pages = 40 * 50\n    result = first_pages + rest_pages\n    return result",
+  "category": "correct"
+ },
+ {
+  "ckpt": "final",
+  "split": "dev",
+  "index": 88,
+  "question": "Pauline has a garden with vegetables. In it, Pauline has planted 3 kinds of tomatoes - 5 of each kind, 5 kinds of cucumbers - 4 of each kind, and 30 potatoes. In the whole garden, there are 10 rows with 15 spaces in each to plant any vegetable. How many more vegetables could Pauline plant in her garden?",
+  "gold": "Pauline planted in total 3 * 5 = <<3*5=15>>15 tomatoes.\nPauline also planted 5 * 4 = <<5*4=20>>20 cucumbers.\nIn total Pauline planted 15 + 20 + 30 = <<15+20+30=65>>65 different vegetables.\nThe whole garden can be filled up with 10 * 15 = <<10*15=150>>150 different vegetables.\nSo Pauline could plant 150 - 65 = <<150-65=85>>85 more vegetables in her garden.\n#### 85",
+  "code": "def simple_math_problem() -> int:\n    '''\n    Pauline has a garden with vegetables.\n    In it, Pauline has planted 3 kinds of tomatoes - 5 of each kind, 5 kinds of cucumbers - 4 of each kind, and 30 potatoes.\n    In the whole garden, there are 10 rows with 15 spaces in each to plant any vegetable.\n    How many more vegetables could Pauline plant in her garden?\n    '''\n    total_vegetables = 3 * 5 + 5 * 4 + 30\n    total_spaces = 10 * 15\n    remaining_vegetables = total_spaces - total_vegetables\n    result = remaining_vegetables\n    return result",
+  "category": "correct"
+ },
+ {
+  "ckpt": "final",
+  "split": "dev",
+  "index": 137,
+  "question": "Smith’s Bakery sold 6 more than four times the number of pies that Mcgee’s Bakery sold. If Mcgee’s Bakery sold 16 pies, how many pies did Smith’s Bakery sell?",
+  "gold": "Four times the number of pies that Mcgee’s sold is 16*4=<<16*4=64>>64 pies\nSmith’s Bakery sold 64+6=<<64+6=70>>70 pies\n#### 70",
+  "code": "def simple_math_problem() -> int:\n    '''\n    Smith’s Bakery sold 6 more than four times the number of pies that Mcgee’s Bakery sold.\n    If Mcgee’s Bakery sold 16 pies, how many pies did Smith’s Bakery sell?\n    '''\n    mkgee_pies = 16\n    smith_pies = 4 * mkgee_pies + 6\n    result = smith_pies\n    return result",
+  "category": "correct"
+ }
+]
