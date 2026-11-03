@@ -49,6 +49,9 @@ ARMS = [
   ('convergence (KL+cos)', '1101-grpo-conv-fmt0.1-kl0.04', 'conv'),
   ('ELBO, no KL', '1103-grpo-elbo-conv-fmt0.1-nokl', 'ELBO'),
 ]
+# colour slot per arm (slot 0, blue, is free because base is drawn as a gray
+# reference line); ELBO takes it so it is not confused with binary (orange)
+SLOT = {name: (0 if name and 'elbo' in name else i) for i, (_, name, _) in enumerate(ARMS)}
 BASE_DEV200 = {'1.0': 0.215, '0.1': 0.390}
 
 
@@ -96,7 +99,7 @@ def fig_dev200_curves():
       if not e:
         continue
       xs, ys = zip(*e)
-      ax.plot(xs, ys, color=C[slot], lw=1.6, marker='o', ms=3.2, label=short)
+      ax.plot(xs, ys, color=C[SLOT[name]], lw=1.6, marker='o', ms=3.2, label=short)
     ax.set_title(f'dev200, T={T}')
     ax.set_xlabel('training step')
     ax.set_ylim(0.15, 0.6)
@@ -118,7 +121,7 @@ def fig_health_logp():
       continue
     m = ma([r for r in rows if r.get('action_logp') is not None], 'action_logp')
     xs, ys = zip(*m)
-    ax.plot(xs, ys, color=C[slot], lw=1.6, label=short)
+    ax.plot(xs, ys, color=C[SLOT[name]], lw=1.6, label=short)
   ax.set_xlabel('training step')
   ax.set_ylabel('mean action log-prob (25-step mean)')
   ax.set_title('Policy drift: falling curves precede divergence')
@@ -135,7 +138,7 @@ def fig_train_correct():
     if not rows:
       continue
     xs, ys = zip(*ma(rows, 'correct'))
-    ax.plot(xs, ys, color=C[slot], lw=1.6, label=short)
+    ax.plot(xs, ys, color=C[SLOT[name]], lw=1.6, label=short)
   ax.set_xlabel('training step')
   ax.set_ylabel('rollout accuracy (25-step mean)')
   ax.set_title('Training-batch accuracy')
@@ -207,16 +210,17 @@ def fig_kl_and_grad():
 
 
 def fig_test_main():
-  models = [('base', 'base'), ('SFT', 'sft'), ('RL (convergence)', 'rl')]
+  models = [('base', 'base'), ('SFT', 'sft'), ('RL, trajectory (D36)', 'rl'),
+            ('RL, ELBO (final)', 'elboconv')]
   settings = [('512 / T=1', 's512-T1.0'), ('512 / T=0.1', 's512-T0.1'), ('1024 / T=1', 's1024-T1.0')]
-  fig, ax = plt.subplots(figsize=(4.8, 2.4))
-  width = 0.26
+  fig, ax = plt.subplots(figsize=(5.6, 2.6))
+  width = 0.2
   for mi, (label, tag) in enumerate(models):
     xs, ys = [], []
     for si, (slabel, s) in enumerate(settings):
       p = os.path.join(RUNS, f'1103-test-{tag}-{s}', 'metrics.json')
       if os.path.exists(p):
-        xs.append(si + (mi - 1) * width)
+        xs.append(si + (mi - (len(models) - 1) / 2) * width)
         ys.append(100 * json.load(open(p))['accuracy'])
     if xs:
       ax.bar(xs, ys, width=width - 0.02, color=C[mi], label=label)
@@ -227,8 +231,8 @@ def fig_test_main():
   ax.set_xlabel('steps / temperature')
   ax.set_ylabel('GSM8K test accuracy (%)')
   ax.set_title('Test set (1319 questions, one seed each)')
-  ax.set_ylim(0, 46)
-  ax.legend(loc='lower center', ncol=3, bbox_to_anchor=(0.5, 1.02))
+  ax.set_ylim(0, 52)
+  ax.legend(loc='lower center', ncol=4, bbox_to_anchor=(0.5, 1.08))
   save(fig, 'fig_test_main')
 
 
