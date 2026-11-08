@@ -252,6 +252,12 @@ def main():
       n_act = grpo.action_counts(rs, tokens, tok.pad_token_id,
                                  count_pad=not args.no_pad).sum().reshape(1)
       rounds, w = logprob.select_rounds(rs, args.rounds, generator=gen)
+      if args.logprob == 'elbo':
+        # R50: logp_elbo has one slot per trajectory; giving it the per-round
+        # stratum weights would broadcast (N,m) x (N,1,L) and multiply every
+        # action by sum_j w_j (= number of non-empty rounds, ~120).
+        w = torch.ones((len(idx), 1), device=rs.device, dtype=w.dtype)
+
       chunks = [slice(s, s + args.chunk) for s in range(0, len(idx), args.chunk)]
       old = None
       if args.updates > 1:  # old log-probs of this batch, same code path and rounds

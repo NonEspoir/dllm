@@ -13,6 +13,7 @@
 
 - SFT 没有提升；RL 显著提升，且超过免费的降温技巧。
 - 定稿先是轨迹法，后来 ELBO 对照臂在 dev 上更好，按事先定的规则改为 ELBO，所以 test 被两个 RL 模型各用过一次。选择只看 dev。
+- **口径提醒**：交付后审查发现 ELBO 臂的 loss/KL 存在权重广播放大（约 120 倍，报告 §6.3.1），比较还差着 KL、选点规则和训练/评测步数。准确率数字有效，但不能据此断言"ELBO 估计量本身更优"。
 - 完整报告见 [`docs/11-报告.md`](docs/11-报告.md)，决策与理由见 [`docs/02-决策记录.md`](docs/02-决策记录.md)。
 
 ## 目录
@@ -45,6 +46,12 @@ huggingface-cli download jdeschena/s-flm tinygsm/mdlm.ckpt --local-dir /root/aut
 ## 1. 数据划分
 
 ```bash
+# 先把 GSM8K 下到 --gsm8k_dir（默认 /root/autodl-tmp/hf/gsm8k/main）
+python - <<'EOF'
+from huggingface_hub import snapshot_download
+snapshot_download('openai/gsm8k', repo_type='dataset',
+                  allow_patterns=['main/*'], local_dir='/root/autodl-tmp/hf/gsm8k')
+EOF
 python scripts/prepare_gsm8k.py   # 输出 /root/autodl-tmp/data/gsm8k_{test,dev,dev200,train}.json
 ```
 
@@ -64,10 +71,11 @@ SPLIT=test SAMPLER=ancestral STEPS=1024 TEMP=1.0 BATCH=64 RUN_NAME=my-repro \
 ```
 
 - `SPLIT` 取 `test`、`dev`、`dev200`；结果写到 `runs/<RUN_NAME>/`：`run_info.txt`（配置、commit、耗时、显存）、`metrics.json`（准确率、CI、逐题对错）、`samples/results.json`（生成内容，不进 git）。
+- 画 slides 需要 `pip install python-pptx`。
 - 评测 SFT 或 RL 的 checkpoint：设置 `CKPT_PATH`。
 - 配对检验（精确 McNemar）：`python scripts/summarize_runs.py compare ../runs/<a> ../runs/<b>`；表格：`summarize_runs.py table ...`。
 - 多数投票 / pass@k（同一 checkpoint 用 8 个不同 seed 评测）：`python scripts/majority_vote.py ../runs/<run1> ../runs/<run2> ...`。
-- **test 只用于两件事**：复现原始模型一次、对定稿模型做最终评测。选步数、温度、checkpoint 都只看 dev。
+- **test 不参与任何选择**：用于复现原始模型一次，以及 base / SFT / 两个 RL 候选（轨迹法原定稿、ELBO 定稿）的最终评测。选步数、温度、checkpoint 都只看 dev。
 - 最终评测的完整流水线：`scripts/pipeline_d6_test.sh`（test 三模型 × 三设置，加 dev 上的步数鲁棒性与投票）。
 
 ## 3. 采样器等价性测试
@@ -104,7 +112,7 @@ python -u -m scripts.grpo --run_name my-grpo-elbo --logprob elbo \
 - 每步 32 题 × G=8，rollout 128 步 T=1；奖励 = 执行正确，另给"能跑但答错"0.1 的格式分；每批 rollout 做 4 次更新（PPO clip，clip-higher）。
 - 每 25 步在 dev200 上评测（两温度）；`--stop_ratio` 是 log-prob 下降刹车。checkpoint 存到 `/root/autodl-tmp/rl_ckpt/<run_name>/`。
 - 轨迹 log-prob 版本（默认 `--logprob trajectory`，收敛轮另加 `--kl 0.04 --kl_clip 20 --kl_max 10`）：`scripts/pipeline_d5f_conv.sh`。ELBO 版本：`scripts/pipeline_d7_elbo.sh`（150 步）、`scripts/pipeline_d8_elbo_conv.sh`（400 步）。
-- ELBO 下不要照搬 KL 系数：KL 量级约大 1000 倍，β=0.04 会压住训练（见报告 §5）。
+- ELBO 下不要照搬 KL 系数：日志里的 KL 量级大约 100 倍（其中约 120 倍来自 §6.3.1 的归一化问题），β=0.04 会压住训练（见报告 §6.3.1）。
 - 按事先定的规则选 checkpoint：`python scripts/select_grpo.py pick ../runs/<arm> [single|smooth3|last]`。
 - 训练曲线转 TensorBoard：`python scripts/runs_to_tb.py <run_name>`。
 
@@ -148,6 +156,8 @@ python -m scripts.demo --split dev --ids 3 17 42 88 137 \
 1. [`docs/11-报告.md`](docs/11-报告.md)：结果与分析
 2. [`docs/02-决策记录.md`](docs/02-决策记录.md)：所有决策、理由、被更正的判断
 3. [`docs/06-进度.md`](docs/06-进度.md)：进度、运行记录与开销
+4. [`docs/13-外部审查.md`](docs/13-外部审查.md)：R50 交付前审查的发现与处理
+5. [`docs/14-面试口径卡.md`](docs/14-面试口径卡.md)：一页纸"可以说 / 不能说"
 
 ## 致谢
 

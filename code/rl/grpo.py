@@ -53,6 +53,10 @@ def grpo_loss(logp_new, logp_old, act, weights, adv, n_actions,
               eps_low=0.2, eps_high=0.28):
   """logp_*: (N, m, L); act: (N, m, L) bool; weights: (N, m); adv: (N,);
   n_actions: (N,) exact action counts. Returns loss and diagnostics."""
+  assert weights.shape[1] == act.shape[1], (
+    f'weights {tuple(weights.shape)} and act {tuple(act.shape)} must agree '
+    'on the round axis; ELBO has a single slot and needs weights=ones(N,1). '
+    'Broadcasting them silently scales each action by sum_j w_j (R50).')
   ratio = torch.exp(logp_new - logp_old)
   a = adv[:, None, None]
   s = torch.minimum(ratio * a, torch.clamp(ratio, 1 - eps_low, 1 + eps_high) * a)

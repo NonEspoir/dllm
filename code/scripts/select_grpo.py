@@ -31,7 +31,7 @@ RUNS = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../runs'))
 
 def load_evals(run):
   """metrics.json, or the EVAL lines of stdout.txt for a run that was stopped
-  before writing it (D5 binary arm, stopped at step 264 after diverging)."""
+  before writing it (D5 binary arm, stopped at step 269 after diverging)."""
   path = os.path.join(run, 'metrics.json')
   if os.path.exists(path):
     with open(path) as f:
@@ -42,7 +42,9 @@ def load_evals(run):
 
 def pick(run, rule='single'):
   evals = load_evals(run)
-  ok = [e for e in evals if e.get('acc_T1.0') is not None and e.get('acc_T0.1') is not None]
+  ok = [e for e in evals
+        if e.get('acc_T1.0') is not None and e.get('acc_T0.1') is not None
+        and not e.get('ckpt_deleted') and os.path.exists(e.get('ckpt', ''))]
   if not ok:
     raise SystemExit(f'no complete eval in {run}')
   mean = [(e['acc_T1.0'] + e['acc_T0.1']) / 2 for e in ok]

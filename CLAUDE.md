@@ -20,7 +20,7 @@
 ## 硬规则
 
 1. **不替用户做决策。** 02 里状态为「待你决定」「待你确认」「延后」的事项，要先问用户。用户定下后，更新 02 的时间线、状态看板和变更日志。
-2. **test 集（GSM8K test 1319 题）只允许两种用法**：D1 按论文设置（1024 步、T=1）复现原始模型一次；对定稿模型做最终评测。步数、温度、学习率、选 checkpoint 等一切选择都只看 dev（D08）。
+2. **test 集（GSM8K test 1319 题）不参与任何选择**：只用于 D1 按论文设置（1024 步、T=1）复现原始模型，以及最终评测（base / SFT / 两个 RL 候选）。步数、温度、学习率、选 checkpoint 等一切选择都只看 dev（D08）。
 3. **不改上游原有的代码路径，只新增。** 新采样器、新方法都写成新的类或函数，用配置切换；原版保留，用于复现、对照和回退（D07）。
 4. **每次 GPU 运行都要记录**：在 `runs/<日期>-<名称>/` 下存配置、git commit、指标 JSON 和日志；在 `docs/06-进度.md` 的「运行记录」里记一行，包括卡时和花费。
 5. **会话结束前更新 `docs/06-进度.md`**：「当前状态」「下一步」「会话日志」。
@@ -30,9 +30,9 @@
 
 - **工作方式**（D27，R21 修订）：**代码在服务器上改、在服务器上跑**（A800）。服务器和本地都以 GitHub `main` 为准：改之前先 `git pull`，改完提交并 `git push`（服务器所在地区学术加速不可用，推送走 SSH，见 07 §5）。不在 Mac 上执行代码。
 - 工作时段实例一直开着，不为省钱频繁开关机。只在用户要睡觉或长时间离开、且没有任务在跑时，提醒一句关机（包周则不用）。
-- 长任务在 tmux 里跑，日志重定向到文件。按量计费时，夜里的长任务可以在命令末尾加 `; /usr/bin/shutdown`；加之前先问用户。如果 Claude 本身就运行在这台服务器上，关机会把会话一起关掉。
+- 长任务用 `nohup setsid bash ... &` 跑（服务器上没有 tmux），日志重定向到文件；按 PID 等待，不要用 `pgrep -f`。按量计费时，夜里的长任务可以在命令末尾加 `; /usr/bin/shutdown`；加之前先问用户。如果 Claude 本身就运行在这台服务器上，关机会把会话一起关掉。
 - checkpoint、数据放在 `/root/autodl-tmp/`（免费 50GB）；checkpoint 只存权重，不存优化器状态。
-- 网络：HuggingFace 用 `export HF_ENDPOINT=https://hf-mirror.com`，或者 `source /etc/network_turbo` 开学术加速（覆盖 github 和 huggingface），用完 `unset http_proxy && unset https_proxy`。
+- 网络：**所在地区不支持 `source /etc/network_turbo`**（只打印"暂未支持"）。HuggingFace 用 `export HF_ENDPOINT=https://hf-mirror.com`；GitHub 大文件用 `https://gh-proxy.com/<原 URL>` + `curl -C -` 续传。
 - 本地访问 GitHub 会超时，下载 GitHub 仓库用 `codeload.github.com` 的 zip。
 
 ## 代码约定
@@ -43,7 +43,8 @@
 - 我们自己的测试放在 `code/tests/`，**不要用 `code/test/`**：上游的 `.gitignore` 会忽略 `test/` 目录和 `*.log`、`*.ipynb`。
 - 远程仓库 `github.com/NonEspoir/dllm` 是**公开**的（D28，用户 10-30 决定）。不要往仓库里写个人信息、服务器地址、密钥或与本作业无关的求职信息。
 - 不在 Mac 上跑代码。所有测试，包括新采样器的逐字一致测试，都在服务器上跑。
-- 服务器环境见 `docs/07-服务器环境配置.md`：PyTorch 2.8.0 / Python 3.12 / CUDA 12.x，flash-attn 2.8.3.post2 预编译包，numpy 固定 1.26.4。
+- 服务器环境见 `docs/07-服务器环境配置.md`：PyTorch 2.8.0 / Python 3.12 / CUDA 12.8，实际装的是 flash-attn **2.8.3**（不是 2.8.3.post2）、pyarrow 19.0.1，numpy 固定 1.26.4。
+- **已知实现问题（R50）**：ELBO 臂的 loss/KL 曾被 `grpo_loss` 的权重广播放大（报告 §6.3.1）。再次训练 ELBO 前必须确认修复与测试；不要用旧日志里的梯度/KL 量级做结论。
 
 ## 和用户沟通
 
