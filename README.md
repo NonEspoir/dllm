@@ -156,7 +156,6 @@ python -m scripts.demo --split dev --ids 3 17 42 88 137 \
 1. [`docs/11-报告.md`](docs/11-报告.md)：结果与分析
 2. [`docs/02-决策记录.md`](docs/02-决策记录.md)：所有决策、理由、被更正的判断
 3. [`docs/06-进度.md`](docs/06-进度.md)：进度、运行记录与开销
-4. [`docs/13-外部审查.md`](docs/13-外部审查.md)：R50 交付前审查的发现与处理
 
 ## 致谢
 
