@@ -25,3 +25,6 @@ runs/**/samples/
 
 # 密钥
 .env
+
+# PowerPoint lock files
+~$*
